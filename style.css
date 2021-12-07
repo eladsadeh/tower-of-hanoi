@@ -1,0 +1,11 @@
+/* Initial style to make the elements visible */
+body {
+	border: 3px solid black;
+    margin: 0px;
+}
+header {
+	border: 2px solid green;
+}
+main {
+	border: 2px solid blue;
+}
