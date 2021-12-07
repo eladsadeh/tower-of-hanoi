@@ -1,2 +1,2 @@
-# tower-of-hanoi
-Tower of Hanoi game
+# Tower of Hanoi
+In browser game developed by Elad Sadeh
