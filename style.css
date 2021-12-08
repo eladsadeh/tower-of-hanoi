@@ -15,19 +15,11 @@ main {
 	background-color: blanchedalmond;
 }
 
-span {
+.info {
 	border: 1px solid brown;
 	border-radius: 6px;
 	background-color: white;
 	padding: 8px;
-}
-
-.tower {
-	border: 2px solid green;
-	width: 33%;
-	background-image: url(./images/rod.png);
-	background-repeat: no-repeat;
-	background-position: center;
 }
 
 #title {
@@ -44,7 +36,7 @@ span {
 	border: 2px solid red;
 	margin: 0 auto;
 	width: 90%;
-	min-height: 300px;
+	min-height: 200px;
 }
 
 #towers {
@@ -79,4 +71,31 @@ span {
 
 .hidden {
 	display: none;
+}
+
+/* Tower and disks style */
+.tower {
+	border: 2px solid green;
+	width: 33%;
+	display: flex;
+	flex-direction: column;
+    justify-content: flex-end;
+	align-items: center;
+	/* background-image: url(./images/rod.png);
+	background-repeat: no-repeat;
+	background-position: center; */
+}
+
+.disk {
+	/* border: 2px solid yellowgreen; */
+	background-color: yellowgreen;
+	box-shadow: 1px 1px 10px 1px darkgreen inset;
+	height: 30px;
+	border-radius: 8px;
+}
+#disk-0 {
+    width: 70%;
+}
+#disk-1 {
+    width: 80%;
 }

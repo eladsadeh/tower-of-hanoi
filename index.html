@@ -11,34 +11,33 @@
 
 <body>
     <header>
-        <button id="about">How to play</button>
         <h1 id="title">Tower of Hanoi</h1>
     </header>
     <main>
         <div id='upper-panel'>
+            <button id="about-btn">How to play</button>
             <button id='level-btn'>Level</button>
-            <span id='move-counter'>124</span>
-            <span id='time-counter'>2:49</span>
+            <span class='info' id='move-counter'>124</span>
+            <span class='info' id='time-counter'>2:49</span>
 
         </div>
         <div id='main-board'>
             <div id='towers'>
-                <div id='tower-A' class='tower' data-name='A'>
-                    <!-- <svg width='100%' height="400">
-                        <rect x="50" y="20" rx="10" ry="10" width="15" height="400" style="fill:red;stroke:black;stroke-width:0" />
-                        </svg> -->
+                <div id='left-tower' class='tower' data-name='A'>
+                    <span class="disk" id='disk-0' data-size="0">DISK0</span>
+                    <span class="disk" id='disk-1' data-size="1">DISK1</span>
                 </div>
-                <div id='tower-B' class='tower' data-name='B'>Tower B
+                <div id='middle-tower' class='tower' data-name='B'>Tower B
                 </div>
-                <div id='tower-C' class='tower' data-name='C'>Tower C
+                <div id='right-tower' class='tower' data-name='C'>Tower C
                 </div>
             </div>
             <div id='base'>a</div>
         </div>
         <div id='lower-panel'>
             <button id='reset-btn'>Restart</button>
-            <span id='message' class='hidden'>Message</span>
-            <span id='min-moves'>Min moves</span>
+            <span class='info' id='message' class='hidden'>Message</span>
+            <span class='info' id='min-moves'>Min moves</span>
             <button id='pause-btn'>Pause</button>
         </div>
     </main>
