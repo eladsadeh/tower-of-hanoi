@@ -111,6 +111,12 @@ function init(currentLevel) {
 		rod.classList.add('rod');
 		rod.style.height = (currentLevel + 1) * DISK_HEIGHT + 'px';
 		tower.appendChild(rod);
+        // update minimal number of moves
+        minMovesEl.innerText = 2 ** currentLevel - 1;
+        // reset time counter
+        timeEl.innerText = 0;
+        // reset moves
+        moveEl.innerText = 0;
 	});
 
 	// create disks
@@ -154,3 +160,7 @@ lowerEl.addEventListener('click', (event) => {
 gameEl.addEventListener('click', (event) => {
 	console.log('Game board was clicked', event.target.id);
 });
+
+window.onload = function () {
+	init(currentLevel);
+};
