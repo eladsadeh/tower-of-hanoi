@@ -4,6 +4,8 @@
 const DEFAULT_LEVEL = 3;
 // Discs colors (or style)
 const DISKS_COLORS = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
+// towers ID
+const TOWERS = ['left-tower', 'mid-tower', 'right-tower'];
 
 // --- Global variables ---
 // State of each tower
@@ -12,12 +14,14 @@ let disks = [];
 // Top disk on each tower
 // Current dificulty level
 let currentLevel = DEFAULT_LEVEL;
+let minSize = 80 - (currentLevel - 1) * 10;
 
 // --- CLASSes ---
 // Disk (location, color, size)
 class Disk {
-	constructor(location, size, color) {
+	constructor(location, index, size, color) {
 		this.location = location;
+		this.index = index;
 		this.size = size;
 		this.color = color;
 	}
@@ -49,17 +53,53 @@ const upperEl = document.getElementById('upper-panel');
 const lowerEl = document.getElementById('lower-panel');
 // Game board
 const gameEl = document.getElementById('main-board');
-// Each individual rods (?)
+// Each individual towers
+const leftTowerEl = document.getElementById('left-tower');
+const midTowerEl = document.getElementById('mid-tower');
+const rightTowerEl = document.getElementById('right-tower');
+const towers = [leftTowerEl, midTowerEl, rightTowerEl];
+
 // Disks (?)
 
-// --- Functions ---
+// --- Helper functions (do little things) ---
+// create array of disks
+function createDisks(num) {
+	const minSize = 80 - (num - 1) * 10;
+	for (i = 0; i < num; i++) {
+		disks.push(
+			new Disk('left-tower', i, minSize + i * 10 + '%', DISKS_COLORS[i])
+		);
+	}
+	console.log(disks);
+}
+
+// create and return disk html element.
+function createDiskElement(index) {
+	let disk = document.createElement('span');
+	console.log(disk);
+}
+
+// --- Main Functions ---
 // Setup board according to level + RESET
 // init(level)
 function init(currentLevel) {
-	// create disks
 	// remove current disks from towers
+	towers.forEach((tower) => {
+		console.log(tower);
+		tower.innerHTML = '';
+	});
+
+	// create disks
+	createDisks(currentLevel);
 	// add new disks to left tower
+	disks.forEach((disk) => {
+		// create new element
+		createDiskElement(disk);
+	});
+
+	// Update minimal number of moves
 }
+
 // Check validity of a move
 // Move disk to new location + update moves counter
 // Check for end of game
@@ -76,12 +116,12 @@ upperEl.addEventListener('click', (event) => {
 // handle clicks on 'pause' and 'reset'
 lowerEl.addEventListener('click', (event) => {
 	console.log('Lower panel was clicked', event.target.id);
+	if (event.target.id === 'reset-btn') {
+		init(currentLevel);
+	}
 });
 // Click on main game board
 // handle clicks on disks and towers
 gameEl.addEventListener('click', (event) => {
 	console.log('Game board was clicked', event.target.id);
 });
-
-// Click and drag on top disks
-// Mouse release on selected disk
