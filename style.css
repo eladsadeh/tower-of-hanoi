@@ -1,6 +1,6 @@
 /* Initial style to make the elements visible */
 body {
-	border: 3px solid black;
+	/* border: 3px solid black; */
 	margin: 0 auto;
 	max-width: 800px;
 	text-align: center;
@@ -92,12 +92,25 @@ main {
 	background-position: center; */
 }
 
+.rod {
+    border: 2px solid black;
+    background-color: rgb(58, 28, 7);
+	border-radius: 15px 15px 0 0;
+	height: 200px;
+    width: 15px;
+    position: absolute;
+    z-index: 0;
+}
+
 .disk {
 	/* border: 2px solid yellowgreen; */
-	background-color: yellowgreen;
-	box-shadow: 1px 1px 10px 1px darkgreen inset;
+	box-shadow: 1px 1px 10px 1px rgb(223, 219, 25) inset;
 	height: 30px;
 	border-radius: 8px;
+    display: inline-block;
+    z-index: 10;
+    vertical-align: middle;
+  line-height: 2;
 }
 #disk-0 {
     width: 70%;

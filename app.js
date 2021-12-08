@@ -1,7 +1,7 @@
 // console.log('Hello from app JS');
 // --- CONSTANTS ---
 // Default level
-const DEFAULT_LEVEL = 3;
+const DEFAULT_LEVEL = 4;
 // Discs colors (or style)
 const DISKS_COLORS = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
 // towers ID
@@ -58,25 +58,37 @@ const leftTowerEl = document.getElementById('left-tower');
 const midTowerEl = document.getElementById('mid-tower');
 const rightTowerEl = document.getElementById('right-tower');
 const towers = [leftTowerEl, midTowerEl, rightTowerEl];
+// const towers = {
+//     'left-tower': leftTowerEl,
+//     'mid-tower': midTowerEl,
+//     'right-tower': rightTowerEl
+// };
 
 // Disks (?)
 
 // --- Helper functions (do little things) ---
 // create array of disks
 function createDisks(num) {
+	disks = [];
 	const minSize = 80 - (num - 1) * 10;
 	for (i = 0; i < num; i++) {
 		disks.push(
 			new Disk('left-tower', i, minSize + i * 10 + '%', DISKS_COLORS[i])
 		);
 	}
-	console.log(disks);
+	// console.log(disks);
 }
 
 // create and return disk html element.
-function createDiskElement(index) {
-	let disk = document.createElement('span');
-	console.log(disk);
+function createDiskElement(disk) {
+	let diskEl = document.createElement('span');
+	// style color, size
+	diskEl.style.backgroundColor = disk.color;
+	diskEl.style.width = disk.size;
+	diskEl.setAttribute('id', 'disk-' + disk.index);
+	diskEl.setAttribute('class', 'disk');
+	diskEl.innerText = disk.index + 1;
+	return diskEl;
 }
 
 // --- Main Functions ---
@@ -84,9 +96,20 @@ function createDiskElement(index) {
 // init(level)
 function init(currentLevel) {
 	// remove current disks from towers
+	console.log('Running init function');
+	// const cDisks = document.getElementsByClassName('disk');
+	// console.log('found ', cDisks.length, ' disks');
+	// Array.from(cDisks).forEach((disk) => {
+	// 	console.log(disk);
+	// 	disk.remove();
+	// });
 	towers.forEach((tower) => {
-		console.log(tower);
+		// clear current contents
 		tower.innerHTML = '';
+		// create the rods
+		let rod = document.createElement('span');
+		rod.classList.add('rod');
+		tower.appendChild(rod);
 	});
 
 	// create disks
@@ -94,7 +117,11 @@ function init(currentLevel) {
 	// add new disks to left tower
 	disks.forEach((disk) => {
 		// create new element
-		createDiskElement(disk);
+		el = createDiskElement(disk);
+		// console.log(el);
+		// Add the disk to the left tower
+		leftTowerEl.appendChild(el);
+		// console.log(leftTowerEl);
 	});
 
 	// Update minimal number of moves
@@ -115,6 +142,7 @@ upperEl.addEventListener('click', (event) => {
 // Click on lower panel
 // handle clicks on 'pause' and 'reset'
 lowerEl.addEventListener('click', (event) => {
+	event.preventDefault();
 	console.log('Lower panel was clicked', event.target.id);
 	if (event.target.id === 'reset-btn') {
 		init(currentLevel);
