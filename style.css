@@ -1,14 +1,82 @@
 /* Initial style to make the elements visible */
 body {
 	border: 3px solid black;
-    margin: 0 auto;
-    max-width: 800px;
-    text-align: center;
-    
+	margin: 0 auto;
+	max-width: 800px;
+	text-align: center;
 }
 header {
 	border: 2px solid green;
+	/* display: flex; */
+	justify-content: center;
 }
 main {
-	border: 2px solid blue;
+	border: 3px solid orange;
+	background-color: blanchedalmond;
+}
+
+span {
+	border: 1px solid brown;
+	border-radius: 6px;
+	background-color: white;
+	padding: 8px;
+}
+
+.tower {
+	border: 2px solid green;
+	width: 33%;
+	background-image: url(./images/rod.png);
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+#title {
+	border: 1px solid gray;
+	display: inline-block;
+}
+#about {
+}
+
+#main-board {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	border: 2px solid red;
+	margin: 0 auto;
+	width: 90%;
+	min-height: 300px;
+}
+
+#towers {
+	border: 3px solid yellow;
+	display: flex;
+	height: 300px;
+}
+
+#base {
+	background-color: rgb(58, 28, 7);
+	border-radius: 15px 15px 5px 5px;
+	min-height: 30px;
+}
+
+#upper-panel {
+	border: 1px solid black;
+	display: flex;
+	justify-content: space-between;
+	padding: 12px 30px;
+}
+
+#upper-panel span {
+	width: 100px;
+}
+
+#lower-panel {
+	border: 1px solid black;
+	display: flex;
+	justify-content: space-between;
+	padding: 12px 30px;
+}
+
+.hidden {
+	display: none;
 }
