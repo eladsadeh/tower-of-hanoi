@@ -2,13 +2,16 @@
 // --- CONSTANTS ---
 // Default level
 const DEFAULT_LEVEL = 4;
-// Discs colors (or style)
+// Style variables
 const DISKS_COLORS = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
+const DISK_HEIGHT = 30; // Disk height in px
+const PADDING = 50;
 // towers ID
 const TOWERS = ['left-tower', 'mid-tower', 'right-tower'];
 
 // --- Global variables ---
 // State of each tower
+// Disks objects (class)
 let disks = [];
 // Location of each disk
 // Top disk on each tower
@@ -52,7 +55,8 @@ const upperEl = document.getElementById('upper-panel');
 // Lower panel
 const lowerEl = document.getElementById('lower-panel');
 // Game board
-const gameEl = document.getElementById('main-board');
+// const gameEl = document.getElementById('main-board');
+const gameEl = document.getElementById('towers');
 // Each individual towers
 const leftTowerEl = document.getElementById('left-tower');
 const midTowerEl = document.getElementById('mid-tower');
@@ -97,18 +101,15 @@ function createDiskElement(disk) {
 function init(currentLevel) {
 	// remove current disks from towers
 	console.log('Running init function');
-	// const cDisks = document.getElementsByClassName('disk');
-	// console.log('found ', cDisks.length, ' disks');
-	// Array.from(cDisks).forEach((disk) => {
-	// 	console.log(disk);
-	// 	disk.remove();
-	// });
 	towers.forEach((tower) => {
 		// clear current contents
 		tower.innerHTML = '';
+		// adjust main board height
+		gameEl.style.height = currentLevel * DISK_HEIGHT + 2 * PADDING + 'px';
 		// create the rods
 		let rod = document.createElement('span');
 		rod.classList.add('rod');
+		rod.style.height = (currentLevel + 1) * DISK_HEIGHT + 'px';
 		tower.appendChild(rod);
 	});
 
