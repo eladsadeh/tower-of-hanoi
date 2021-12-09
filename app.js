@@ -17,6 +17,7 @@ let disks = [];
 // Top disk on each tower
 // Current dificulty level
 let currentLevel = DEFAULT_LEVEL;
+// width of smallest disk in px
 let minSize = 80 - (currentLevel - 1) * 10;
 
 // --- CLASSes ---
@@ -71,10 +72,10 @@ const towers = [leftTowerEl, midTowerEl, rightTowerEl];
 // Disks (?)
 
 // --- Helper functions (do little things) ---
-// create array of disks
+// create array of disks using Disk class
 function createDisks(num) {
 	disks = [];
-	const minSize = 80 - (num - 1) * 10;
+	// const minSize = 80 - (num - 1) * 10;
 	for (i = 0; i < num; i++) {
 		disks.push(
 			new Disk('left-tower', i, minSize + i * 10 + '%', DISKS_COLORS[i])
@@ -92,7 +93,19 @@ function createDiskElement(disk) {
 	diskEl.setAttribute('id', 'disk-' + disk.index);
 	diskEl.setAttribute('class', 'disk');
 	diskEl.innerText = disk.index + 1;
+	if (disk.index === 0) {
+		diskEl.classList.add('top-disk');
+		diskEl = makeDragable(diskEl);
+	}
 	return diskEl;
+}
+
+// Add draggable attributes to element and retrun the element
+function makeDragable(el) {
+	el.setAttribute('draggable', 'true');
+	el.setAttribute('ondragstart', 'onDragStart(event)');
+	el.setAttribute('ondragend', 'onDragEnd(event)');
+	return el;
 }
 
 // --- Main Functions ---
@@ -111,12 +124,12 @@ function init(currentLevel) {
 		rod.classList.add('rod');
 		rod.style.height = (currentLevel + 1) * DISK_HEIGHT + 'px';
 		tower.appendChild(rod);
-        // update minimal number of moves
-        minMovesEl.innerText = 2 ** currentLevel - 1;
-        // reset time counter
-        timeEl.innerText = 0;
-        // reset moves
-        moveEl.innerText = 0;
+		// update minimal number of moves
+		minMovesEl.innerText = 2 ** currentLevel - 1;
+		// reset time counter
+		timeEl.innerText = 0;
+		// reset moves
+		moveEl.innerText = 0;
 	});
 
 	// create disks
@@ -130,8 +143,51 @@ function init(currentLevel) {
 		leftTowerEl.appendChild(el);
 		// console.log(leftTowerEl);
 	});
+}
 
-	// Update minimal number of moves
+// ---- Game logic pseudocode ---
+// Drag a disk to new location
+// IF new location is valid (empty or top disk is bigger)
+//   Drop the disk
+//   Make the top disk in the "from" tower dragablle
+//   Make the disk bellow the new disk in the "to" tower non-draggable.
+// ELSE display message that the move is not allowed
+//
+// Check if the game ended (all disks are in the last tower)
+
+// --- Drag and Drop handlers ---
+function onDragEnd(ev) {
+	ev.preventDefault();
+    // console.log(ev.target);
+    console.log('drag-end:', ev.target.parentElement);
+
+	// console.log(ev.target);
+	ev.dataTransfer.dropEffect = 'move';
+}
+
+function onDragStart(ev) {
+    console.log('drag-start', ev.target.parentElement)
+	ev.dataTransfer.setData('text/html', ev.target.outerHTML);
+	ev.dataTransfer.setData('text', ev.target.id);
+	ev.dataTransfer.effectAllowed = 'move';
+}
+function onDragOver(ev) {
+    ev.preventDefault();
+}
+
+function onDrop(ev) {
+    console.log('drop: ', ev.target);
+	// console.log(ev.target.classList);
+	if (ev.target.classList.contains('rod')) {
+        ev.preventDefault();
+		// console.log('Its a rod! ', ev.target);
+
+		console.log(ev.target.parentElement);
+		// Get the id of the target and add the moved element to the target's DOM
+		const data = ev.dataTransfer.getData('text');
+		// console.log(data);
+		ev.target.parentElement.prepend(document.getElementById(data));
+	}
 }
 
 // Check validity of a move
@@ -158,7 +214,7 @@ lowerEl.addEventListener('click', (event) => {
 // Click on main game board
 // handle clicks on disks and towers
 gameEl.addEventListener('click', (event) => {
-	console.log('Game board was clicked', event.target.id);
+	console.log(event.target.id, ' is dragged');
 });
 
 window.onload = function () {

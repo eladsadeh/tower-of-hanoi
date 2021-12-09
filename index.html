@@ -17,20 +17,20 @@
         <div id='upper-panel'>
             <button id="about-btn">How to play</button>
             <button id='level-btn'>Level</button>
-            <span class='info' id='move-counter'>124</span>
-            <span class='info' id='time-counter'>2:49</span>
+            <span class='info' id='move-counter'></span>
+            <span class='info' id='time-counter'></span>
 
         </div>
         <div id='main-board'>
             <div id='towers'>
-                <div id='left-tower' class='tower' data-name='A'>
+                <div id='left-tower' class='tower' data-name='A' ondrop="onDrop(event)" ondragover="onDragOver(event)">
                     <span class='rod'></span>
                 </div>
-                <div id='mid-tower' class='tower' data-name='B'>
-                    <span class='rod'></span>
+                <div id='mid-tower' class='tower' data-name='B' ondrop="onDrop(event)" ondragover="onDragOver(event)">
+                    <span class='rod' ondrop="onDrop(event)" dragover="onDragOver(event)"></span>
                 </div>
-                <div id='right-tower' class='tower' data-name='C'>
-                    <span class='rod'></span>
+                <div id='right-tower' class='tower' data-name='C' ondrop="onDrop(event)" ondragover="onDragOver(event)">
+                    <span class='rod' ondrop="onDrop(event)"></span>
                 </div>
             </div>
             <div id='base'>
