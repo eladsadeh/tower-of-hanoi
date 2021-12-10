@@ -8,7 +8,8 @@ const DISK_HEIGHT = 30; // Disk height in px
 const PADDING = 50;
 // towers ID
 const TOWERS_NAMES = ['left-tower', 'mid-tower', 'right-tower'];
-const START_TOWER = 'left-tower';
+const START_TOWER = TOWERS_NAMES[0];
+const LAST_TOWER = TOWERS_NAMES[2];
 
 // --- Global variables ---
 // State of the towers
@@ -24,7 +25,9 @@ let toTowerEl = '';
 // Disks objects (class)
 let disks = [];
 // moves counter
+let movesCounter = '';
 // timer
+let timer = '';
 // Current dificulty level
 let currentLevel = DEFAULT_LEVEL;
 // width of smallest disk in px
@@ -121,6 +124,8 @@ function makeDragable(el) {
 	return el;
 }
 
+function runTimer() {}
+
 // --- Main Functions ---
 // Setup board according to level + RESET
 // init(level)
@@ -139,9 +144,11 @@ function init(currentLevel) {
 	// update minimal number of moves
 	minMovesEl.innerText = 2 ** currentLevel - 1;
 	// reset time counter
-	timeEl.innerText = 0;
+	timer = 0;
+	timeEl.innerText = timer;
 	// reset moves
-	moveEl.innerText = 0;
+	movesCounter = 0;
+	moveEl.innerText = movesCounter;
 
 	// adjust the rods height
 	Array.from(document.getElementsByClassName('rod')).forEach((rod, i) => {
@@ -166,15 +173,6 @@ function init(currentLevel) {
 		towersState[START_TOWER].push('disk-' + disk.index);
 	});
 }
-
-// ---- Game logic pseudocode ---
-// Drag a disk to new location
-// IF new location is valid (empty or top disk is bigger)
-//   Make the top disk in the "from" tower dragablle
-//   Make the disk bellow the new disk in the "to" tower non-draggable.
-// ELSE display message that the move is not allowed
-//
-// Check if the game ended (all disks are in the last tower)
 
 // --- Drag and Drop handlers ---
 // I used the folowing documentation:
@@ -219,7 +217,7 @@ function onDragOver(ev) {
 	ev.preventDefault();
 	// console.log('Im over a ', ev.target.id);
 	if (ev.target.id.includes('rod')) {
-		console.log('Im over a rod in', ev.target.parentElement.id);
+		// console.log('Im over a rod in', ev.target.parentElement.id);
 		// document.getElementById(ev.target.id).style.border = '4px solid yellow';
 	}
 }
@@ -235,26 +233,34 @@ function onDrop(ev) {
 		ev.preventDefault();
 		const fromId = fromTowerEl.id;
 		const toId = ev.target.parentElement.id;
-		const disk = towersState[fromId][0];
-		console.log('drop:', disk, fromId, '->', toId);
+		// const disk = towersState[fromId][0];
+		console.log('drop:', towersState[fromId][0], fromId, '->', toId);
 		// Check if its OK to drop (either no disks or the top disk is bigger)
 		// console.log('number of disks:', towersState[toId].length);
-		if (!towersState[toId].length || disk < towersState[toId][0]) {
+		if (
+			!towersState[toId].length ||
+			towersState[fromId][0] < towersState[toId][0]
+		) {
 			console.log('valid move');
 			// update towers state array
 			towersState[toId].unshift(towersState[fromId].shift());
-			// towersState[fromId].shift();
-			console.log(towersState);
+			// *** check for end of game
+			if (towersState[LAST_TOWER].length === currentLevel) {
+				console.log('GAME END');
+			} else {
+				console.log('not yet');
+			}
+			// Update moves counter
+			moveEl.innerText = ++movesCounter;
 			const data = ev.dataTransfer.getData('text');
 			ev.target.parentElement.prepend(document.getElementById(data));
 		} else {
 			console.log('invalid move!');
+			// *** show message
 		}
 	}
 }
 
-// Check validity of a move
-// Move disk to new location + update moves counter
 // Check for end of game
 // Show 'About' modal
 // Show level selection modal
