@@ -7,6 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Signika&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Signika&family=Ubuntu:wght@300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <title>Tower of Hanoi</title>
 </head>
@@ -34,11 +38,15 @@
                 </ol>
                 <p>To start the game, drag the top disk of the left stack into en empty rod.</p>
 
-                <p id='about-more' class='hidden'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto,
-                    tenetur ut, illum minima asperiores
-                    dicta
-                    perferendis quaerat maiores recusandae saepe, accusantium debitis. Quaerat eos facere est in tempora
-                    maiores quia!</p>
+                <p id='about-more' class='hidden'>The tower of Hanoi (also called the tower of Brahma or the Lucas tower) was invented by a French mathematician Édouard
+                Lucas in the 19th century. It is associated with a legend of a Hindu temple where the puzzle was supposedly used to
+                increase the mental discipline of young priests. In the legend the young priests were given 64 gold disks stacked neatly
+                on one of three posts. Each disk rested on a slightly larger disk. The priests' goal was to re-create the stack on a
+                different post by moving disks, one at a time, to another post with the rule that a larger disk could never be placed on
+                top of a smaller disk. Using mathematics, you can calculate that even when the priests found the most efficient way to
+                solve the problem, and moved the disks at a rate of one per second, it would take almost 585 billion years to finish the
+                job. That is more than 40 times the age of the universe! <br> <br>
+            <a class='link' href="https://www.scientificamerican.com/article/the-tower-of-hanoi/">From the Scientific American Website</a> </p>
                 <button id='read-more-btn' class="modal-btn">Read more</button>
                 <button id='close-about-btn' class="modal-btn">Close</button>
             </div>
@@ -46,7 +54,7 @@
         <div id='upper-panel'>
             <button id="about-btn">How to play</button>
             <button id='level-btn'>Level</button>
-            <span class='info' id='message' class='hidden'>Message</span>
+            <span class='info' id='message' class=''>Message</span>
 
         </div>
         <div id='main-board'>

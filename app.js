@@ -122,12 +122,12 @@ function runTimer(run) {
 	// controled by the drag start function and
 	// the pause button
 	if (run) {
-		console.log('start interval');
+		// console.log('start interval');
 		timerInterval = setInterval(() => {
 			timeEl.innerHTML = ++timeCounter;
 		}, 1000);
 	} else {
-		console.log('clear interval');
+		// console.log('clear interval');
 		clearInterval(timerInterval);
 		timerInterval = 0;
 	}
@@ -198,7 +198,7 @@ function init(currentLevel) {
 // and a lot of trial and error to set up the drag and drop
 //
 function onDragStart(ev) {
-	console.log('"', timerInterval, "'", Boolean(timerInterval));
+	// console.log('"', timerInterval, "'", Boolean(timerInterval));
 	// Start the timer if its not running
 	if (!Boolean(timerInterval)) runTimer(true);
 	// Log the origin tower
@@ -300,6 +300,17 @@ mainEl.addEventListener('click', (event) => {
 			break;
 		case 'close-about-btn':
 			document.getElementById('about-container').classList.toggle('hidden');
+			break;
+		case 'read-more-btn':
+			if (document.getElementById('about-more').classList.contains('hidden')) {
+				document.getElementById('about-more').classList.remove('hidden');
+				document.getElementById('read-more-btn').innerText = 'Read Less';
+			} else {
+				document.getElementById('about-more').classList.add('hidden');
+				document.getElementById('read-more-btn').innerText = 'Read More';
+			}
+			// document.getElementById('read-more-btn').innerText = 'Read Less';
+
 			break;
 	}
 });
