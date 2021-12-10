@@ -1,7 +1,7 @@
 // console.log('Hello from app JS');
 // --- CONSTANTS ---
 // Default level
-const DEFAULT_LEVEL = 2;
+const DEFAULT_LEVEL = 3;
 // Style variables
 const DISKS_COLORS = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
 const DISK_HEIGHT = 30; // Disk height in px
@@ -52,11 +52,12 @@ class Disk {
 // --- HTML elements ---
 // --- Elements needed for interacation
 // Time counter
-const timeEl = document.getElementById('time-counter');
+const timeEl = document.querySelector('#time-counter');
+console.log(timeEl);
 // Moves counter
 const moveEl = document.getElementById('move-counter');
 // Message
-const messgeEl = document.getElementById('message');
+const messageEl = document.getElementById('message');
 // --- Elements needed for event listeners
 // Game board
 const mainEl = document.getElementById('game');
@@ -69,11 +70,11 @@ const towers = [leftTowerEl, midTowerEl, rightTowerEl];
 // Disks (?)
 
 // --- Helper functions (do little things) ---
-// reset towers state array
-function resetTowersState() {
-	TOWERS_NAMES.forEach((tower) => {
-		towersState[tower] = [];
-	});
+// show message on game board
+function displayMessage(message, color, time = 5000) {
+	messageEl.innerText = message;
+	messageEl.style.color = color;
+	setTimeout(() => (messageEl.innerText = ''), time);
 }
 
 // create array of disks using Disk class
@@ -181,7 +182,9 @@ function init(currentLevel) {
 		// console.log(leftTowerEl);
 	});
 	// reset and initialize towers data
-	resetTowersState();
+	TOWERS_NAMES.forEach((tower) => {
+		towersState[tower] = [];
+	});
 	disks.forEach((disk) => {
 		towersState[START_TOWER].push('disk-' + disk.index);
 	});
@@ -266,6 +269,7 @@ function onDrop(ev) {
 		} else {
 			console.log('invalid move!');
 			// *** show message
+			displayMessage('Disks allowed on top of bigger disks only', 'red');
 		}
 	}
 }
@@ -285,7 +289,17 @@ mainEl.addEventListener('click', (event) => {
 			init(currentLevel);
 			break;
 		case 'pause-btn':
+			displayMessage(
+				'Timer will continue when you make your next move',
+				'blue'
+			);
 			runTimer(false);
+			break;
+		case 'about-btn':
+			document.getElementById('about-container').classList.toggle('hidden');
+			break;
+		case 'close-about-btn':
+			document.getElementById('about-container').classList.toggle('hidden');
 			break;
 	}
 });

@@ -1,6 +1,7 @@
 /* variables */
 :root {
-  --rod-color: rgb(58, 27, 5);
+	--rod-color: rgb(58, 27, 5);
+	--bg-color: rgb(251, 248, 232);
 }
 body {
 	/* border: 3px solid black; */
@@ -16,7 +17,27 @@ header {
 main {
 	overflow: auto;
 	/* border: 3px solid orange; */
-	background-color: rgb(251, 248, 232);
+	background-color: var(--bg-color);
+	border-radius: 12px;
+}
+
+#about-container {
+	z-index: 20;
+	min-height: 100%;
+	/* border: 2px solid red; */
+	position: absolute;
+	background-color: rgba(34, 31, 4, 0.701);
+	box-sizing:border-box;
+}
+#about-box {
+	/* height:inherit; */
+	background-color: white;
+	margin: 2rem 6rem;
+	padding: 20px 30px;
+	text-align: left;
+	border-radius: 8px;
+	box-shadow: tan;
+
 }
 
 .info {
@@ -39,8 +60,6 @@ main {
 	/* border: 1px solid gray; */
 	display: inline-block;
 }
-#about {
-}
 
 #main-board {
 	overflow: auto;
@@ -53,7 +72,6 @@ main {
 	/* height: 400px; */
 }
 
-
 #upper-panel {
 	/* border: 1px solid black; */
 	display: flex;
@@ -61,21 +79,34 @@ main {
 	padding: 12px 30px;
 }
 
-/* moves and time counters */
-#upper-panel span {
-	width: 100px;
+#message {
+	width: 50%;
 }
-
+/* Lower Panel */
 #lower-panel {
-	/* border: 1px solid black; */
+	border: 1px solid black;
 	display: flex;
 	justify-content: space-between;
-	padding: 12px 30px;
+	align-items: center;
+	padding: 6px 30px;
+}
+.material-icons#pause-btn {
+	font-size: 28px;
+}
+
+#pause-btn {
+	/* min-height: 5rem; */
+	background: none;
+	border: none;
+	color: var(--rod-color);
+	margin: 0;
+	padding: 8px;
 }
 
 .hidden {
 	display: none;
 }
+/* moves and time counters */
 
 /*** Main game board style ***/
 #towers {

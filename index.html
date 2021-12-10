@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <title>Tower of Hanoi</title>
 </head>
@@ -14,11 +16,37 @@
         <h1 id="title">Tower of Hanoi</h1>
     </header>
     <main id='game'>
+        <div id="about-container" class='hidden'>
+            <div id='about-box'>
+                <h4>How to play</h4>
+                <p id='about-text'>The game begins with the disks stacked on the left rod (A) in order of decreasing size, the
+                    smallest at the top. <br><br> The objective
+                    of the puzzle is to move the entire stack to the <strong>last (C)</strong> rod, obeying the following rules:</p>
+                <ol>
+                    <li>
+                        Only one disk may be moved at a time.</li>
+                    <li> Each move consists of taking the upper disk from one of the stacks and placing it on top of
+                        another stack or on an
+                        empty rod.</li>
+                    <li>
+                        No disk may be placed on top of a disk that is smaller than it.
+                    </li>
+                </ol>
+                <p>To start the game, drag the top disk of the left stack into en empty rod.</p>
+
+                <p id='about-more' class='hidden'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto,
+                    tenetur ut, illum minima asperiores
+                    dicta
+                    perferendis quaerat maiores recusandae saepe, accusantium debitis. Quaerat eos facere est in tempora
+                    maiores quia!</p>
+                <button id='read-more-btn' class="modal-btn">Read more</button>
+                <button id='close-about-btn' class="modal-btn">Close</button>
+            </div>
+        </div>
         <div id='upper-panel'>
             <button id="about-btn">How to play</button>
             <button id='level-btn'>Level</button>
-            <span class='info' id='move-counter'></span>
-            <span class='info' id='time-counter'></span>
+            <span class='info' id='message' class='hidden'>Message</span>
 
         </div>
         <div id='main-board'>
@@ -41,9 +69,13 @@
         </div>
         <div id='lower-panel'>
             <button id='reset-btn'>Restart</button>
-            <span class='info' id='message' class='hidden'>Message</span>
             <span class='info' id='min-moves'>Min moves</span>
-            <button id='pause-btn'>Pause</button>
+            <span class='info' id='move-counter'></span>
+            <span id='timer'>
+                <span class="material-icons-outlined">&#xe425</span>
+                <span class='info' id='time-counter'></span>
+                <button id='pause-btn' class="material-icons">&#xe034</button>
+            </span>
         </div>
     </main>
     <script src="app.js"></script>
