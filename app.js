@@ -8,15 +8,23 @@ const DISK_HEIGHT = 30; // Disk height in px
 const PADDING = 50;
 // towers ID
 const TOWERS_NAMES = ['left-tower', 'mid-tower', 'right-tower'];
+const START_TOWER = 'left-tower';
 
 // --- Global variables ---
+// State of the towers
+const towersState = {
+	'left-tower': [],
+	'mid-tower': [],
+	'right-tower': [],
+};
+
 // TO and FROM towers for disks move
 let fromTowerEl = '';
 let toTowerEl = '';
 // Disks objects (class)
 let disks = [];
-// Location of each disk
-// Top disk on each tower
+// moves counter
+// timer
 // Current dificulty level
 let currentLevel = DEFAULT_LEVEL;
 // width of smallest disk in px
@@ -65,22 +73,24 @@ const leftTowerEl = document.getElementById('left-tower');
 const midTowerEl = document.getElementById('mid-tower');
 const rightTowerEl = document.getElementById('right-tower');
 const towers = [leftTowerEl, midTowerEl, rightTowerEl];
-// const towers = {
-//     'left-tower': leftTowerEl,
-//     'mid-tower': midTowerEl,
-//     'right-tower': rightTowerEl
-// };
 
 // Disks (?)
 
 // --- Helper functions (do little things) ---
+// reset towers state array
+function resetTowersState() {
+	TOWERS_NAMES.forEach((tower) => {
+		towersState[tower] = [];
+	});
+}
+
 // create array of disks using Disk class
 function createDisks(num) {
 	disks = [];
 	// const minSize = 80 - (num - 1) * 10;
 	for (i = 0; i < num; i++) {
 		disks.push(
-			new Disk('left-tower', i, minSize + i * 10 + '%', DISKS_COLORS[i])
+			new Disk(START_TOWER, i + 1, minSize + i * 10 + '%', DISKS_COLORS[i])
 		);
 	}
 	// console.log(disks);
@@ -95,14 +105,14 @@ function createDiskElement(disk) {
 	diskEl.setAttribute('id', 'disk-' + disk.index);
 	diskEl.setAttribute('class', 'disk');
 	diskEl.setAttribute('data-size', disk.index);
-	diskEl.innerText = disk.index + 1;
-	if (disk.index === 0) {
+	diskEl.innerText = disk.index;
+	if (disk.index === 1) {
 		diskEl = makeDragable(diskEl);
 	}
 	return diskEl;
 }
 
-// Add draggable attributes to element and retrun the element
+// Add draggable attributes to element and return the element
 function makeDragable(el) {
 	el.classList.add('top-disk');
 	el.setAttribute('draggable', 'true');
@@ -123,17 +133,17 @@ function init(currentLevel) {
 			el.remove()
 		);
 		// tower.innerHTML = '';
-		// adjust main board height
-		gameEl.style.height = currentLevel * DISK_HEIGHT + 2 * PADDING + 'px';
-		// update minimal number of moves
-		minMovesEl.innerText = 2 ** currentLevel - 1;
-		// reset time counter
-		timeEl.innerText = 0;
-		// reset moves
-		moveEl.innerText = 0;
 	});
+	// adjust main board height
+	gameEl.style.height = currentLevel * DISK_HEIGHT + 2 * PADDING + 'px';
+	// update minimal number of moves
+	minMovesEl.innerText = 2 ** currentLevel - 1;
+	// reset time counter
+	timeEl.innerText = 0;
+	// reset moves
+	moveEl.innerText = 0;
 
-	// create the rods
+	// adjust the rods height
 	Array.from(document.getElementsByClassName('rod')).forEach((rod, i) => {
 		rod.setAttribute('id', TOWERS_NAMES[i] + '-rod');
 		rod.style.height = (currentLevel + 1) * DISK_HEIGHT + PADDING + 'px';
@@ -150,6 +160,11 @@ function init(currentLevel) {
 		leftTowerEl.appendChild(el);
 		// console.log(leftTowerEl);
 	});
+	// reset and initialize towers data
+	resetTowersState();
+	disks.forEach((disk) => {
+		towersState[START_TOWER].push('disk-' + disk.index);
+	});
 }
 
 // ---- Game logic pseudocode ---
@@ -162,10 +177,22 @@ function init(currentLevel) {
 // Check if the game ended (all disks are in the last tower)
 
 // --- Drag and Drop handlers ---
+// I used the folowing documentation:
+// https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
+// and tutorial:
+// https://www.javascripttutorial.net/web-apis/javascript-drag-and-drop/
+// and a lot of trial and error to set up the drag and drop
+//
 function onDragStart(ev) {
-	console.log('drag-start', ev.target.id, 'in', ev.target.parentElement.id);
+	// console.log(
+	// 	'drag-start:',
+	// 	ev.target.id,
+	// 	'inside',
+	// 	ev.target.parentElement.id
+	// );
+	// Log the origin tower
 	fromTowerEl = document.getElementById(ev.target.parentElement.id);
-	// console.log(fromTowerEl.querySelector('.disk'))
+	// get the disk data (html, id)
 	ev.dataTransfer.setData('text/html', ev.target.outerHTML);
 	ev.dataTransfer.setData('text', ev.target.id);
 	ev.dataTransfer.effectAllowed = 'move';
@@ -180,23 +207,25 @@ function onDragEnd(ev) {
 	}
 	// console.log(topDiskInFrom);
 
-	console.log('drag-end:', ev.target.id, ' in ', ev.target.parentElement.id);
+	// console.log('drag-end:', ev.target.id, ' in ', ev.target.parentElement.id);
 
 	// console.log(ev.target);
+	// const data = ev.dataTransfer.getData('text');
 	ev.dataTransfer.dropEffect = 'move';
+	// ev.target.parentElement.prepend(document.getElementById(data));
 }
 
 function onDragOver(ev) {
 	ev.preventDefault();
 	// console.log('Im over a ', ev.target.id);
 	if (ev.target.id.includes('rod')) {
-		// console.log('Im over a rod');
+		console.log('Im over a rod in', ev.target.parentElement.id);
 		// document.getElementById(ev.target.id).style.border = '4px solid yellow';
 	}
 }
 
 function onDrop(ev) {
-	console.log('drop to: ', ev.target.parentElement.id);
+	// console.log('drop', ev.target.id, 'in: ', ev.target.parentElement.id);
 	// console.log(ev.target.classList);
 	// IF the target is a rod AND its not the same rod
 	if (
@@ -204,15 +233,23 @@ function onDrop(ev) {
 		fromTowerEl.id !== ev.target.parentElement.id
 	) {
 		ev.preventDefault();
-		console.log(fromTowerEl.id, '->', ev.target.parentElement.id);
+		const fromId = fromTowerEl.id;
+		const toId = ev.target.parentElement.id;
+		const disk = towersState[fromId][0];
+		console.log('drop:', disk, fromId, '->', toId);
 		// Check if its OK to drop (either no disks or the top disk is bigger)
-		const topDiskInTo = ev.target.parentElement.querySelector('.disk');
-		if (topDiskInTo !== null) {
+		// console.log('number of disks:', towersState[toId].length);
+		if (!towersState[toId].length || disk < towersState[toId][0]) {
+			console.log('valid move');
+			// update towers state array
+			towersState[toId].unshift(towersState[fromId].shift());
+			// towersState[fromId].shift();
+			console.log(towersState);
+			const data = ev.dataTransfer.getData('text');
+			ev.target.parentElement.prepend(document.getElementById(data));
+		} else {
+			console.log('invalid move!');
 		}
-		console.log('top disk in', ev.target.parentElement.id, ':', topDiskInTo);
-		const data = ev.dataTransfer.getData('text');
-		// console.log(data);
-		ev.target.parentElement.prepend(document.getElementById(data));
 	}
 }
 
@@ -243,6 +280,6 @@ gameEl.addEventListener('click', (event) => {
 	console.log(event.target.id);
 });
 
-window.onload = function () {
-	init(currentLevel);
-};
+// window.onload = function () {
+init(currentLevel);
+// };
