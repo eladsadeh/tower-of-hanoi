@@ -51,31 +51,14 @@ class Disk {
 
 // --- HTML elements ---
 // --- Elements needed for interacation
-// About button
-const aboutBtn = document.getElementById('about-btn');
-// Reset button
-const resetBtn = document.getElementById('reset-btn');
-// Pause button
-const pauseBtn = document.getElementById('pause-btn');
-// Level button
-const levelBtn = document.getElementById('level-btn');
 // Time counter
 const timeEl = document.getElementById('time-counter');
 // Moves counter
 const moveEl = document.getElementById('move-counter');
-// Min number of steps
-const minMovesEl = document.getElementById('min-moves');
 // Message
 const messgeEl = document.getElementById('message');
 // --- Elements needed for event listeners
-// Upper panel
-const upperEl = document.getElementById('upper-panel');
-// Game board (three rods and disks)
-// Lower panel
-const lowerEl = document.getElementById('lower-panel');
 // Game board
-// const gameEl = document.getElementById('main-board');
-const gameEl = document.getElementById('towers');
 const mainEl = document.getElementById('game');
 // Each individual towers
 const leftTowerEl = document.getElementById('left-tower');
@@ -169,9 +152,10 @@ function init(currentLevel) {
 		// tower.innerHTML = '';
 	});
 	// adjust main board height
-	gameEl.style.height = currentLevel * DISK_HEIGHT + 3 * PADDING + 'px';
+	document.getElementById('towers').style.height =
+		currentLevel * DISK_HEIGHT + 3 * PADDING + 'px';
 	// update minimal number of moves
-	minMovesEl.innerText = 2 ** currentLevel - 1;
+	document.getElementById('min-moves').innerHTML = 2 ** currentLevel - 1;
 	// reset time counter
 	timeCounter = 0;
 	timeEl.innerText = timeCounter;
@@ -291,20 +275,7 @@ function onDrop(ev) {
 // Show level selection modal
 
 // --- Event Listeners ---
-// Click on upper panel
-// Handle clicks on 'about' and 'level'
-upperEl.addEventListener('click', (event) => {
-	console.log('Upper panel was clicked', event.target.id);
-});
-// Click on lower panel
-// handle clicks on 'pause' and 'reset'
-lowerEl.addEventListener('click', (event) => {
-	event.preventDefault();
-	console.log('Lower panel was clicked', event.target.id);
-	if (event.target.id === 'reset-btn') {
-		init(currentLevel);
-	}
-});
+
 // Click on main game board
 mainEl.addEventListener('click', (event) => {
 	event.preventDefault();
@@ -317,10 +288,6 @@ mainEl.addEventListener('click', (event) => {
 			runTimer(false);
 			break;
 	}
-});
-// handle clicks on disks and towers
-gameEl.addEventListener('click', (event) => {
-	console.log(event.target.id);
 });
 
 // window.onload = function () {
