@@ -1,7 +1,7 @@
 // console.log('Hello from app JS');
 // --- CONSTANTS ---
 // Default level
-const DEFAULT_LEVEL = 4;
+const DEFAULT_LEVEL = 2;
 // Style variables
 const DISKS_COLORS = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
 const DISK_HEIGHT = 30; // Disk height in px
@@ -9,6 +9,7 @@ const PADDING = 50;
 // towers ID
 const TOWERS_NAMES = ['left-tower', 'mid-tower', 'right-tower'];
 const START_TOWER = TOWERS_NAMES[0];
+const AUX_TOWER = TOWERS_NAMES[1];
 const LAST_TOWER = TOWERS_NAMES[2];
 
 // --- Global variables ---
@@ -19,6 +20,9 @@ const towersState = {
 	'right-tower': [],
 };
 
+// moves history array
+const movesHistory = [];
+
 // TO and FROM towers for disks move
 let fromTowerEl = '';
 let toTowerEl = '';
@@ -27,7 +31,8 @@ let disks = [];
 // moves counter
 let movesCounter = '';
 // timer
-let timer = '';
+let timeCounter = '';
+let timerInterval = '';
 // Current dificulty level
 let currentLevel = DEFAULT_LEVEL;
 // width of smallest disk in px
@@ -71,6 +76,7 @@ const lowerEl = document.getElementById('lower-panel');
 // Game board
 // const gameEl = document.getElementById('main-board');
 const gameEl = document.getElementById('towers');
+const mainEl = document.getElementById('game');
 // Each individual towers
 const leftTowerEl = document.getElementById('left-tower');
 const midTowerEl = document.getElementById('mid-tower');
@@ -100,6 +106,7 @@ function createDisks(num) {
 }
 
 // create and return disk html element.
+// Run during initialization
 function createDiskElement(disk) {
 	let diskEl = document.createElement('span');
 	// style color, size
@@ -110,13 +117,13 @@ function createDiskElement(disk) {
 	diskEl.setAttribute('data-size', disk.index);
 	diskEl.innerText = disk.index;
 	if (disk.index === 1) {
-		diskEl = makeDragable(diskEl);
+		diskEl = makeDraggable(diskEl);
 	}
 	return diskEl;
 }
 
 // Add draggable attributes to element and return the element
-function makeDragable(el) {
+function makeDraggable(el) {
 	el.classList.add('top-disk');
 	el.setAttribute('draggable', 'true');
 	el.setAttribute('ondragstart', 'onDragStart(event)');
@@ -124,7 +131,29 @@ function makeDragable(el) {
 	return el;
 }
 
-function runTimer() {}
+function runTimer(run) {
+	// ** Timer start when the player move the first disk
+
+	// 'pause' is initialized to true and is
+	// controled by the drag start function and
+	// the pause button
+	if (run) {
+		console.log('start interval');
+		timerInterval = setInterval(() => {
+			timeEl.innerHTML = ++timeCounter;
+		}, 1000);
+	} else {
+		console.log('clear interval');
+		clearInterval(timerInterval);
+		timerInterval = 0;
+	}
+	// IF timeCounter == 0 && not 'pause'
+	// setTimeInterval every 1 second
+	// increase timer and update the display
+
+	// ** Timer stop when the game over or the pause button was pressed.
+	// ** If in pause, timer start when the next move is made
+}
 
 // --- Main Functions ---
 // Setup board according to level + RESET
@@ -140,12 +169,12 @@ function init(currentLevel) {
 		// tower.innerHTML = '';
 	});
 	// adjust main board height
-	gameEl.style.height = currentLevel * DISK_HEIGHT + 2 * PADDING + 'px';
+	gameEl.style.height = currentLevel * DISK_HEIGHT + 3 * PADDING + 'px';
 	// update minimal number of moves
 	minMovesEl.innerText = 2 ** currentLevel - 1;
 	// reset time counter
-	timer = 0;
-	timeEl.innerText = timer;
+	timeCounter = 0;
+	timeEl.innerText = timeCounter;
 	// reset moves
 	movesCounter = 0;
 	moveEl.innerText = movesCounter;
@@ -182,12 +211,9 @@ function init(currentLevel) {
 // and a lot of trial and error to set up the drag and drop
 //
 function onDragStart(ev) {
-	// console.log(
-	// 	'drag-start:',
-	// 	ev.target.id,
-	// 	'inside',
-	// 	ev.target.parentElement.id
-	// );
+	console.log('"', timerInterval, "'", Boolean(timerInterval));
+	// Start the timer if its not running
+	if (!Boolean(timerInterval)) runTimer(true);
 	// Log the origin tower
 	fromTowerEl = document.getElementById(ev.target.parentElement.id);
 	// get the disk data (html, id)
@@ -201,16 +227,12 @@ function onDragEnd(ev) {
 	// console.log(ev.target);
 	const topDiskInFrom = fromTowerEl.querySelector('.disk');
 	if (topDiskInFrom !== null) {
-		makeDragable(topDiskInFrom);
+		makeDraggable(topDiskInFrom);
 	}
-	// console.log(topDiskInFrom);
 
 	// console.log('drag-end:', ev.target.id, ' in ', ev.target.parentElement.id);
 
-	// console.log(ev.target);
-	// const data = ev.dataTransfer.getData('text');
 	ev.dataTransfer.dropEffect = 'move';
-	// ev.target.parentElement.prepend(document.getElementById(data));
 }
 
 function onDragOver(ev) {
@@ -242,16 +264,19 @@ function onDrop(ev) {
 			towersState[fromId][0] < towersState[toId][0]
 		) {
 			console.log('valid move');
-			// update towers state array
+			// update towers state array - move the disk from 'fromId' to 'toId'
 			towersState[toId].unshift(towersState[fromId].shift());
-			// *** check for end of game
+			// *** check for end of game (all the disks are in the last tower)
 			if (towersState[LAST_TOWER].length === currentLevel) {
 				console.log('GAME END');
+				// stop the timer
+				runTimer(false);
 			} else {
 				console.log('not yet');
 			}
 			// Update moves counter
 			moveEl.innerText = ++movesCounter;
+			// move the html element
 			const data = ev.dataTransfer.getData('text');
 			ev.target.parentElement.prepend(document.getElementById(data));
 		} else {
@@ -281,6 +306,18 @@ lowerEl.addEventListener('click', (event) => {
 	}
 });
 // Click on main game board
+mainEl.addEventListener('click', (event) => {
+	event.preventDefault();
+	console.log('Main board was clicked', event.target.id);
+	switch (event.target.id) {
+		case 'reset-btn':
+			init(currentLevel);
+			break;
+		case 'pause-btn':
+			runTimer(false);
+			break;
+	}
+});
 // handle clicks on disks and towers
 gameEl.addEventListener('click', (event) => {
 	console.log(event.target.id);

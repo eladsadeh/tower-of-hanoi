@@ -13,7 +13,7 @@
     <header>
         <h1 id="title">Tower of Hanoi</h1>
     </header>
-    <main>
+    <main id='game'>
         <div id='upper-panel'>
             <button id="about-btn">How to play</button>
             <button id='level-btn'>Level</button>
@@ -26,7 +26,7 @@
                 <div id='left-tower' class='tower' data-name='A' ondrop="onDrop(event)" ondragover="return false">
                     <span id="rod-A" class='rod'></span>
                 </div>
-                <div id='mid-tower' class='tower' data-name='B' ondrop="onDrop(event)" ondragover="onDragOver(event)">
+                <div id='mid-tower' class='tower' data-name='B' ondrop="onDrop(event)" ondragover="return false">
                     <span id="rod-B" class='rod'></span>
                 </div>
                 <div id='right-tower' class='tower' data-name='C' ondrop="onDrop(event)" ondragover="onDragOver(event)">

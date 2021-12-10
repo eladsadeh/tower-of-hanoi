@@ -1,4 +1,7 @@
-/* Initial style to make the elements visible */
+/* variables */
+:root {
+  --rod-color: rgb(58, 27, 5);
+}
 body {
 	/* border: 3px solid black; */
 	margin: 0 auto;
@@ -24,6 +27,9 @@ main {
 }
 
 #base {
+	background-color: var(--rod-color);
+	border-radius: 15px 15px 5px 5px;
+	min-height: 30px;
 	color: whitesmoke;
 	display: flex;
 	justify-content: space-around;
@@ -47,18 +53,6 @@ main {
 	/* height: 400px; */
 }
 
-#towers {
-	overflow: auto;
-	/* border: 3px solid yellow; */
-	display: flex;
-	/* height: 300px; */
-}
-
-#base {
-	background-color: rgb(58, 28, 7);
-	border-radius: 15px 15px 5px 5px;
-	min-height: 30px;
-}
 
 #upper-panel {
 	/* border: 1px solid black; */
@@ -67,6 +61,7 @@ main {
 	padding: 12px 30px;
 }
 
+/* moves and time counters */
 #upper-panel span {
 	width: 100px;
 }
@@ -82,7 +77,14 @@ main {
 	display: none;
 }
 
-/* Tower and disks style */
+/*** Main game board style ***/
+#towers {
+	overflow: auto;
+	/* border: 3px solid yellow; */
+	display: flex;
+	/* height: 300px; */
+}
+
 .tower {
 	/* border: 2px solid green; */
 	width: 33%;
@@ -97,12 +99,12 @@ main {
 
 .rod {
 	/* border: 2px solid rgba(0, 0, 0, 0); */
-	background: rgb(58, 28, 7);
+	background: var(--rod-color);
 	border-radius: 15px 15px 0 0;
 	/* height: 200px; */
 	width: 30px;
-    height: 100px;
-    margin: 20px 20px 0 20px;
+	height: 100px;
+	margin: 20px 20px 0 20px;
 	position: absolute;
 	z-index: 0;
 }
