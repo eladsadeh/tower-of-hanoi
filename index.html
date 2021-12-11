@@ -17,9 +17,9 @@
 </head>
 
 <body>
-    
-    <div id="about-container" class='hidden'>
-        <div id='about-box'>
+
+    <div id="about-container" class='modal-container hidden'>
+        <div id='about-box' class='modal'>
             <h4>How to play</h4>
             <p id='about-text'>The game begins with the disks stacked on the left rod (A) in order of decreasing size,
                 the
@@ -68,6 +68,7 @@
             <button id='close-about-btn' class="modal-btn">Close</button>
         </div>
     </div>
+
     <header>
         <h1 id="title">Tower of Hanoi</h1>
         <h2>Mathematical Game</h2>
@@ -78,7 +79,7 @@
         <div id='upper-panel'>
             <button id="about-btn">How to play</button>
             <button id='level-btn' title="Select Level">Select Level</button>
-            <span class='info' id='message' class=''></span>
+            <span class='info' id='message' style="font-size: 20px;"></span>
 
         </div>
         <div id='main-board'>
@@ -101,9 +102,12 @@
         </div>
         <div id='lower-panel'>
             <button id='reset-btn' title='Restart the game'>Restart</button>
-            <span class='info' id='min-moves'>Min moves</span>
-            <span class='info' id='move-counter'></span>
-            <span id='timer'>
+            <span id=move-counter-wrapper class=wrapper>
+                <span class="material-icons-outlined">directions_walk</span>
+                <span class='info' id='move-counter'></span>
+
+            </span>
+            <span id='timer' class=wrapper>
                 <span class="material-icons-outlined">&#xe425</span>
                 <span class='info' id='time-counter'></span>
                 <button id='pause-btn' class="material-icons" title='Pause the time counter'>&#xe034</button>

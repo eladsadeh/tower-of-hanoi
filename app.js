@@ -68,13 +68,12 @@ function readText() {
 	// 		console.log(evt.target.result);
 	// 	};
 	const content = reader.readAsText('/test.html');
-	console.log(content);
+	// console.log(content);
 	// console.log(text.readAsText('./test.html'));
 }
 // show message on game board
-function displayMessage(message, color, time = 5000) {
+function displayMessage(message, time = 4000) {
 	messageEl.innerText = message;
-	messageEl.style.color = color;
 	setTimeout(() => (messageEl.innerText = ''), time);
 }
 
@@ -142,21 +141,20 @@ function runTimer(run) {
 }
 
 function endGame() {
-	console.log('GAME END');
+	// console.log('GAME END');
 	// stop the timer
 	runTimer(false);
 	let t = '';
 	let m = '';
 	if (movesCounter === 2 ** currentLevel - 1) {
 		t = 'Perfect!';
-		m = `You completed the game in ${movesCounter} moves. This is the minimal number of moves possible!. Try the next level`;
+		m = `You completed the game in ${movesCounter} moves. \n This is the minimal number of moves possible!.\n Try the next level`;
 	} else {
 		t = 'Well Done!';
-		m = `You completed the game in ${movesCounter} moves. It is possible to do it in ${
+		m = `You completed the game in ${movesCounter} moves.\n It is possible to do it in ${
 			2 ** currentLevel - 1
-		} moves. Would you like to try again?`;
+		} moves.\n Would you like to try again?`;
 	}
-	console.log(t, m);
 	// Open the game end modal with message content
 	displayGameEndModal(t, m);
 }
@@ -166,7 +164,7 @@ function endGame() {
 // init(level)
 function init(currentLevel) {
 	// remove current disks from towers
-	console.log('Running init function');
+	// console.log('Running init function');
 	towers.forEach((tower) => {
 		// clear current contents
 		Array.from(tower.getElementsByClassName('disk')).forEach((el) =>
@@ -178,7 +176,12 @@ function init(currentLevel) {
 	document.getElementById('towers').style.height =
 		currentLevel * DISK_HEIGHT + 3 * PADDING + 'px';
 	// update minimal number of moves
-	document.getElementById('min-moves').innerHTML = 2 ** currentLevel - 1;
+	// document.getElementById('min-moves').innerHTML = 2 ** currentLevel - 1;
+    
+	displayMessage(
+		`Minimum steps: ${2 ** currentLevel - 1}`,
+		5000
+	);
 	// reset time counter
 	timeCounter = 0;
 	timeEl.innerText = timeCounter;
@@ -229,7 +232,7 @@ function onDragStart(ev) {
 	// get the disk data (html, id)
 	ev.dataTransfer.setData('text/html', ev.target.outerHTML);
 	ev.dataTransfer.setData('text', ev.target.id);
-	console.log('dragged disk:', ev.target.id);
+	// console.log('dragged disk:', ev.target.id);
 	ev.dataTransfer.effectAllowed = 'move';
 }
 
@@ -267,21 +270,21 @@ function onDrop(ev) {
 		const fromId = fromTowerEl.id;
 		const toId = ev.target.parentElement.id;
 		// const disk = towersState[fromId][0];
-		console.log('drop:', towersState[fromId][0], fromId, '->', toId);
+		// console.log('drop:', towersState[fromId][0], fromId, '->', toId);
 		// Check if its OK to drop (either no disks or the top disk is bigger)
 		// console.log('number of disks:', towersState[toId].length);
 		if (
 			!towersState[toId].length ||
 			towersState[fromId][0] < towersState[toId][0]
 		) {
-			console.log('valid move');
+			// console.log('valid move');
 			// update towers state array - move the disk from 'fromId' to 'toId'
 			towersState[toId].unshift(towersState[fromId].shift());
 			// Update moves counter
 			moveEl.innerText = ++movesCounter;
 			// Make the bottom disk undraggable (if there is one)
 			if (towersState[toId].length > 1) {
-				console.log('make', towersState[toId][1], 'undraggable');
+				// console.log('make', towersState[toId][1], 'undraggable');
 				makeUnDraggable(document.getElementById(towersState[toId][1]));
 			}
 			// *** check for end of game (all the disks are in the last tower)
@@ -300,9 +303,9 @@ function onDrop(ev) {
 		} else {
 			// console.log('invalid move!');
 			// *** show message
-			displayMessage('Disks allowed on top of bigger disks only', 'red');
+			displayMessage('Disks Not allowed on top of a smaller disks');
 		}
-		console.log(towersState);
+		// console.log(towersState);
 	}
 }
 
@@ -311,8 +314,10 @@ function onDrop(ev) {
 function displayLevelSelect() {
 	const selectLevel = document.createElement('div');
 	selectLevel.setAttribute('id', 'select-level-body');
+	selectLevel.setAttribute('class', 'modal-container');
 	const selBtnDiv = document.createElement('div');
 	selBtnDiv.setAttribute('id', 'select-level-modal');
+	selBtnDiv.setAttribute('class', 'modal');
 	const p = document.createElement('p');
 	p.setAttribute('id', 'sel-lvl-title');
 	p.innerText = 'Select number of disks';
@@ -338,12 +343,14 @@ function displayLevelSelect() {
 // Show level selection modal
 //create modal and insert it as first child of body
 function displayGameEndModal(title, message) {
-	// create body container
+	// create modal container
 	const gameEndEl = document.createElement('div');
 	gameEndEl.setAttribute('id', 'game-end-container');
-	// create modal container
+	gameEndEl.setAttribute('class', 'modal-container');
+	// create modal box
 	const gameEndModalEl = document.createElement('div');
 	gameEndModalEl.setAttribute('id', 'game-end-modal');
+	gameEndModalEl.setAttribute('class', 'modal');
 	// add the title to the modal
 	const t = document.createElement('p');
 	t.setAttribute('id', 'game-end-title');
@@ -403,14 +410,15 @@ document.body.addEventListener('click', (event) => {
 			init(currentLevel);
 			break;
 		case 'pause-btn':
-			displayMessage('Make your next move to continue', 'brown');
 			runTimer(false);
 			break;
 		case 'about-btn': // Show 'About' modal
-			document.getElementById('about-container').classList.toggle('hidden');
+			document.getElementById('about-container').classList.remove('hidden');
 			break;
 		case 'close-about-btn':
-			document.getElementById('about-container').classList.toggle('hidden');
+			console.log(document.getElementById('about-container').classList);
+			document.getElementById('about-container').classList.add('hidden');
+			console.log(document.getElementById('about-container').classList);
 			break;
 		case 'read-more-btn':
 			if (document.getElementById('about-more').classList.contains('hidden')) {
@@ -431,7 +439,7 @@ document.body.addEventListener('click', (event) => {
 		// remove the game end modal
 		document.getElementById('game-end-container').remove();
 		id.includes('next') && currentLevel++;
-		console.log(currentLevel);
+		// console.log(currentLevel);
 		!id.includes('cancel') && init(currentLevel);
 	}
 	// If level selection button was clicked

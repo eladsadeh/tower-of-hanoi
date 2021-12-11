@@ -3,6 +3,8 @@
 	--rod-color: rgb(28, 15, 6);
 	--bg-color: rgb(251, 248, 232);
 }
+/* --- hide/show elements --- */
+
 body {
 	/* border: 3px solid black; */
 	background-color: var(--rod-color);
@@ -26,11 +28,8 @@ header {
 }
 
 main {
-	/* overflow: auto; */
-	/* border: 3px solid orange; */
 	background-color: var(--bg-color);
 	border-radius: 12px;
-	/* padding: 20px; */
 }
 
 button {
@@ -42,33 +41,39 @@ button {
 	border: none;
 	border-radius: 6px;
 	box-shadow: 0 0 8px inset;
-	margin: 10px 20px;
+	/* margin: 10px 20px; */
 }
 
-main.about {
-}
-
-/* --- About modal ----------- */
-#about-container {
-	z-index: 20;
+/* ----- Modals containers ---- */
+.modal-container {
+	z-index: 10;
+	display: flex;
+	justify-content: center;
 	min-height: 100%;
 	width: 100%;
-	/* border: 2px solid red; */
 	position: absolute;
-	left: 0%;
-	background-color: rgba(34, 31, 4, 0.701);
-	box-sizing: border-box;
+	left: 0;
+	right: 0;
+	background-color: rgba(34, 31, 4, 0.51);
 }
-#about-box {
-	/* height:inherit; */
+
+/* --- Modals box --- */
+.modal {
 	background-color: var(--bg-color);
-	margin: 5rem 6rem;
-	padding: 20px 30px;
-	text-align: left;
+	max-width: 40rem;
+	margin-top: 5rem;
+	margin-bottom: auto;
+	padding: 20px;
+	text-align: center;
 	border-radius: 8px;
 	box-shadow: 8px 8px 5px var(--rod-color);
 	font-size: 1rem;
 	line-height: 1.3;
+}
+
+/* --- About modal ----------- */
+#about-box {
+	text-align: left;
 }
 
 #about-more {
@@ -79,72 +84,36 @@ main.about {
 }
 /* ----------------------- */
 /* Level selection modal */
-#select-level-body {
-	z-index: 10;
-	min-height: 100%;
-	width: 100%;
-	position: absolute;
-	/* left: 0%; */
-	background-color: rgba(34, 31, 4, 0.51);
-	box-sizing: border-box;
-}
+
 #sel-lvl-title {
+	display: inline-block;
 	color: var(--rod-color);
 	font-size: 24px;
 }
-#select-level-modal {
-	/* height:inherit; */
-	background-color: var(--bg-color);
-	margin: 5rem 6rem;
-	padding: 20px;
-	text-align: center;
-	border-radius: 8px;
-	box-shadow: 8px 8px 5px var(--rod-color);
-	font-size: 1rem;
-	line-height: 1.3;
+
+.lvl-btn {
+	margin: 6px;
+	width: 2.5rem;
+	font-size: 20px;
 }
 
 /* Geme End modal */
-#game-end-container {
-	z-index: 10;
-	min-height: 100%;
-	width: 100%;
-	position: absolute;
-	/* left: 0%; */
-	background-color: rgba(34, 31, 4, 0.51);
-	box-sizing: border-box;
-}
+
 #game-end-title {
 	color: var(--rod-color);
 	font-size: 24px;
 }
-#game-end-modal {
-	/* height:inherit; */
-	background-color: var(--bg-color);
-	/* max-width: 30rem; */
-	margin: 5rem 6rem;
-	padding: 20px;
-	text-align: center;
-	border-radius: 8px;
-	box-shadow: 8px 8px 5px var(--rod-color);
-	font-size: 1rem;
-	line-height: 1.3;
-}
 
-.game-end-container {
-	border: 1px dashed black;
-}
-
-.game-end-btn {
+#game-end-buttons > button {
 	padding: 10px 10px;
 	color: var(--bg-color);
-	margin: 8px;
+	margin: 12px;
 	min-width: 30px;
 	font-size: 18px;
 	cursor: pointer;
 	border: none;
 	border-radius: 5px;
-	box-shadow: 0 0 8px rgb(72, 45, 7) inset;
+	box-shadow: 0 0 18px rgb(72, 45, 7) inset;
 }
 /* ---------------------- */
 
@@ -155,27 +124,6 @@ main.about {
 	right: 0;
 }
 
-.info {
-	border: 1px solid brown;
-	border-radius: 6px;
-	background-color: white;
-	padding: 8px;
-}
-
-#base {
-	background-color: var(--rod-color);
-	background-image: linear-gradient(
-		rgb(206, 112, 10),
-		rgb(118, 62, 41),
-		var(--rod-color) 30%
-	);
-	border-radius: 15px 15px 5px 5px;
-	min-height: 30px;
-	color: whitesmoke;
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
-}
 #title {
 	/* border: 1px solid gray; */
 	display: inline-block;
@@ -207,18 +155,28 @@ h2 {
 	/* height: 400px; */
 }
 
+/* ----- Upper panel --- */
 #upper-panel {
 	/* border: 1px solid black; */
 	display: flex;
 	justify-content: space-between;
-	padding: 12px 30px;
+	padding: 12px 40px;
+}
+#upper-panel > button {
+	margin-right: 10px;
 }
 
+/* Message window */
 #message {
 	width: 50%;
-	height: 20px;
-	border: none;
+	display: flex;
+	/* height: 20px; */
+	/* border: solid; */
 	background-color: var(--bg-color);
+	min-height: 40px;
+	align-items: center;
+	font-size: 18px;
+	/* padding: 5px; */
 }
 /* Lower Panel */
 #lower-panel {
@@ -226,32 +184,65 @@ h2 {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 10px 30px;
+	padding: 10px 40px;
+	margin: 0 auto;
+	position: relative;
 }
 /* --- Google Icons --- */
 .material-icons#pause-btn {
-	font-size: 28px;
+	/* font-size: 8px; */
 }
 .material-icons {
-	font-size: 35px;
+	/* font-size: 35px; */
 }
+
 .material-icons-outlined {
 	font-size: 35px;
+	color: var(--rod-color);
 }
 
+/* --- Timer ---- */
+/* Pause button */
 #pause-btn {
 	/* min-height: 5rem; */
-	background: none;
+	/* background: none; */
 	border: none;
-	color: var(--rod-color);
+	color: var(--bg-color);
 	margin: 0;
+	/* padding: 8px; */
+}
+/* timer and moves wrappers */
+#lower-panel .wrapper {
+	display: flex;
+	align-items: center;
+	background-color: none;
+	border: 1px solid var(--rod-color);
 	padding: 8px;
+	border-radius: 6px;
+	font-size: 28px;
+	/* position: absolute; */
+	min-height: 50px;
 }
-
-.hidden {
-	display: none;
+/* time counter */
+#time-counter {
+	margin: 10px;
+	min-width: 50px;
+	text-align: right;
 }
-/* moves and time counters */
+/*--- moves counter ---*/
+#move-counter-wrapper {
+	display: flex;
+	align-items: center;
+	border: none;
+	background-color: none;
+	border: 1px solid var(--rod-color);
+	padding: 4px;
+	border-radius: 6px;
+}
+#move-counter {
+	min-width: 50px;
+	text-align: center;
+}
 
 /*** Main game board style ***/
 #towers {
@@ -295,9 +286,8 @@ h2 {
 	box-shadow: 0px 0px 10px 1px var(--bg-color) inset;
 	height: 30px;
 	border-radius: 10px;
-	display: inline-block;
+	display: block;
 	z-index: 1;
-	vertical-align: middle;
 	text-align: center;
 	line-height: 2;
 }
@@ -308,7 +298,7 @@ h2 {
 }
 
 #base {
-	background-color: var(--rod-color);
+	/* background-color: var(--rod-color); */
 	background-image: linear-gradient(
 		rgb(206, 112, 10),
 		rgb(118, 62, 41),
@@ -316,8 +306,13 @@ h2 {
 	);
 	border-radius: 15px 15px 5px 5px;
 	min-height: 30px;
-	color: whitesmoke;
+	color: var(--bg-color);
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
+	padding: 0 8px 0 0;
+}
+
+.hidden {
+	display: none;
 }
