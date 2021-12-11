@@ -106,7 +106,37 @@ main.about {
 	line-height: 1.3;
 }
 
-.lvl-btn {
+/* Geme End modal */
+#game-end-container {
+	z-index: 10;
+	min-height: 100%;
+	width: 100%;
+	position: absolute;
+	/* left: 0%; */
+	background-color: rgba(34, 31, 4, 0.51);
+	box-sizing: border-box;
+}
+#sel-lvl-title {
+	color: var(--rod-color);
+	font-size: 24px;
+}
+#game-end-modal {
+	/* height:inherit; */
+	background-color: var(--bg-color);
+	margin: 5rem 6rem;
+	padding: 20px;
+	text-align: center;
+	border-radius: 8px;
+	box-shadow: 8px 8px 5px var(--rod-color);
+	font-size: 1rem;
+	line-height: 1.3;
+}
+
+.game-end-container {
+	border: 1px dashed black;
+}
+
+.game-end-btn {
 	padding: 10px 15px;
 	color: black;
 	margin: 8px;

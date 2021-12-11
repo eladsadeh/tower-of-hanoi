@@ -14,11 +14,7 @@ const LAST_TOWER = TOWERS_NAMES[2];
 
 // --- Global variables ---
 // State of the towers
-const towersState = {
-	'left-tower': [],
-	'mid-tower': [],
-	'right-tower': [],
-};
+const towersState = {};
 
 // moves history array
 const movesHistory = [];
@@ -48,7 +44,7 @@ class Disk {
 }
 
 // --- HTML elements ---
-// --- Elements needed for interacation
+// --- Elements needed for intercation
 // Time counter
 const timeEl = document.querySelector('#time-counter');
 // Moves counter
@@ -64,9 +60,17 @@ const midTowerEl = document.getElementById('mid-tower');
 const rightTowerEl = document.getElementById('right-tower');
 const towers = [leftTowerEl, midTowerEl, rightTowerEl];
 
-// Disks (?)
-
 // --- Helper functions (do little things) ---
+
+function readText() {
+	const reader = new FileReader();
+	// reader.onload = function (evt) {
+	// 		console.log(evt.target.result);
+	// 	};
+	const content = reader.readAsText('/test.html');
+	console.log(content);
+	// console.log(text.readAsText('./test.html'));
+}
 // show message on game board
 function displayMessage(message, color, time = 5000) {
 	messageEl.innerText = message;
@@ -267,6 +271,7 @@ function onDrop(ev) {
 			// *** check for end of game (all the disks are in the last tower)
 			if (towersState[LAST_TOWER].length === currentLevel) {
 				console.log('GAME END');
+				displayGameEndModal('Success!', 'Good Job');
 				// stop the timer
 				runTimer(false);
 			} else {
@@ -314,6 +319,56 @@ function displayLevelSelect() {
 	// console.log(selectLevel);
 }
 
+// --- Game end modal ----
+// Show level selection modal
+//create modal and insert it as first child of body
+function displayGameEndModal(title, message) {
+	// create body container
+	const gameEndEl = document.createElement('div');
+	gameEndEl.setAttribute('id', 'game-end-container');
+	// create modal container
+	const gameEndModalEl = document.createElement('div');
+	gameEndModalEl.setAttribute('id', 'game-end-modal');
+	// add the title to the modal
+	const t = document.createElement('p');
+	t.setAttribute('id', 'game-end-title');
+	t.innerText = title;
+	gameEndModalEl.appendChild(t);
+	// add the message to the modal
+	const m = document.createElement('p');
+	m.setAttribute('id', 'game-end-message');
+	m.innerText = message;
+	gameEndModalEl.appendChild(m);
+	// create container for the buttons
+	const gameEndBtnsEl = document.createElement('div');
+	gameEndBtnsEl.setAttribute('id', 'game-end-buttons');
+	gameEndModalEl.appendChild(gameEndBtnsEl);
+	// Re-start button
+	let btn = document.createElement('button');
+	btn.setAttribute('id', 'game-end-restart');
+	btn.setAttribute('class', 'game-end-btn');
+	btn.innerText = 'ReStart';
+	gameEndBtnsEl.appendChild(btn);
+	// Cancel button
+	btn = document.createElement('button');
+	btn.setAttribute('id', 'game-end-cancel');
+	btn.setAttribute('class', 'game-end-btn');
+	btn.innerText = 'Cancel';
+
+	gameEndBtnsEl.appendChild(btn);
+	// next level button
+	btn = document.createElement('button');
+	btn.setAttribute('id', 'game-end-next');
+	btn.setAttribute('class', 'game-end-btn');
+	btn.innerText = 'Next Level';
+
+	gameEndBtnsEl.appendChild(btn);
+
+	gameEndEl.appendChild(gameEndModalEl);
+	document.body.prepend(gameEndEl);
+	// console.log(gameEndEl);
+}
+
 // --- Event Listeners ---
 
 // Click on main game board
@@ -321,6 +376,7 @@ function displayLevelSelect() {
 document.body.addEventListener('click', (event) => {
 	event.preventDefault();
 	console.log(event.target.id, 'was clicked');
+	console.log('The parent is:', event.target.parentElement.id);
 	switch (event.target.id) {
 		case 'reset-btn':
 			init(currentLevel);
@@ -347,6 +403,15 @@ document.body.addEventListener('click', (event) => {
 		case 'level-btn':
 			displayLevelSelect();
 			break;
+	}
+	if (event.target.parentElement.id === 'game-end-buttons') {
+		const id = event.target.id;
+		// console.log(document.getElementById('game-end-container'));
+		// remove the game end modal
+		document.getElementById('game-end-container').remove();
+		id.includes('next') && currentLevel++;
+		console.log(currentLevel);
+		!id.includes('cancel') && init(currentLevel);
 	}
 	// If level selection button was clicked
 	if (event.target.parentElement.id === 'sel-btn-container') {
