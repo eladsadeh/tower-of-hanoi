@@ -139,12 +139,26 @@ function runTimer(run) {
 		clearInterval(timerInterval);
 		timerInterval = 0;
 	}
-	// IF timeCounter == 0 && not 'pause'
-	// setTimeInterval every 1 second
-	// increase timer and update the display
+}
 
-	// ** Timer stop when the game over or the pause button was pressed.
-	// ** If in pause, timer start when the next move is made
+function endGame() {
+	console.log('GAME END');
+	// stop the timer
+	runTimer(false);
+	let t = '';
+	let m = '';
+	if (movesCounter === 2 ** currentLevel - 1) {
+		t = 'Perfect!';
+		m = `You completed the game in ${movesCounter} moves. This is the minimal number of moves possible!. Try the next level`;
+	} else {
+		t = 'Well Done!';
+		m = `You completed the game in ${movesCounter} moves. It is possible to do it in ${
+			2 ** currentLevel - 1
+		} moves. Would you like to try again?`;
+	}
+	console.log(t, m);
+	// Open the game end modal with message content
+	displayGameEndModal(t, m);
 }
 
 // --- Main Functions ---
@@ -263,6 +277,8 @@ function onDrop(ev) {
 			console.log('valid move');
 			// update towers state array - move the disk from 'fromId' to 'toId'
 			towersState[toId].unshift(towersState[fromId].shift());
+			// Update moves counter
+			moveEl.innerText = ++movesCounter;
 			// Make the bottom disk undraggable (if there is one)
 			if (towersState[toId].length > 1) {
 				console.log('make', towersState[toId][1], 'undraggable');
@@ -270,15 +286,14 @@ function onDrop(ev) {
 			}
 			// *** check for end of game (all the disks are in the last tower)
 			if (towersState[LAST_TOWER].length === currentLevel) {
-				console.log('GAME END');
-				displayGameEndModal('Success!', 'Good Job');
-				// stop the timer
-				runTimer(false);
+				// console.log('GAME END');
+				// displayGameEndModal('Success!', 'Good Job');
+				// // stop the timer
+				// runTimer(false);
+				endGame();
 			} else {
 				// console.log('not yet');
 			}
-			// Update moves counter
-			moveEl.innerText = ++movesCounter;
 			// move the html element
 			const data = ev.dataTransfer.getData('text');
 			ev.target.parentElement.prepend(document.getElementById(data));
@@ -347,20 +362,26 @@ function displayGameEndModal(title, message) {
 	let btn = document.createElement('button');
 	btn.setAttribute('id', 'game-end-restart');
 	btn.setAttribute('class', 'game-end-btn');
-	btn.innerText = 'ReStart';
+	btn.setAttribute('class', 'material-icons');
+	btn.setAttribute('title', 'Restart');
+	btn.innerText = 'reply';
 	gameEndBtnsEl.appendChild(btn);
 	// Cancel button
 	btn = document.createElement('button');
 	btn.setAttribute('id', 'game-end-cancel');
 	btn.setAttribute('class', 'game-end-btn');
-	btn.innerText = 'Cancel';
+	btn.setAttribute('class', 'material-icons');
+	btn.setAttribute('title', 'Close window');
+	btn.innerText = 'close';
 
 	gameEndBtnsEl.appendChild(btn);
 	// next level button
 	btn = document.createElement('button');
 	btn.setAttribute('id', 'game-end-next');
 	btn.setAttribute('class', 'game-end-btn');
-	btn.innerText = 'Next Level';
+	btn.setAttribute('class', 'material-icons');
+	btn.setAttribute('title', 'Go To Next Level');
+	btn.innerText = 'forward';
 
 	gameEndBtnsEl.appendChild(btn);
 
