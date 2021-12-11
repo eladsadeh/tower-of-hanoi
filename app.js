@@ -36,7 +36,6 @@ let timerInterval = '';
 // Current dificulty level
 let currentLevel = DEFAULT_LEVEL;
 
-
 // --- CLASSes ---
 // Disk (location, color, size)
 class Disk {
@@ -52,7 +51,6 @@ class Disk {
 // --- Elements needed for interacation
 // Time counter
 const timeEl = document.querySelector('#time-counter');
-console.log(timeEl);
 // Moves counter
 const moveEl = document.getElementById('move-counter');
 // Message
@@ -89,7 +87,7 @@ function createDisks(num) {
 }
 
 // create and return disk html element.
-// Run during initialization
+// Run during initialization and
 function createDiskElement(disk) {
 	let diskEl = document.createElement('span');
 	// style color, size
@@ -98,6 +96,9 @@ function createDiskElement(disk) {
 	diskEl.setAttribute('id', 'disk-' + disk.index);
 	diskEl.setAttribute('class', 'disk');
 	diskEl.setAttribute('data-size', disk.index);
+	diskEl.setAttribute('ondragstart', 'onDragStart(event)');
+	diskEl.setAttribute('ondragend', 'onDragEnd(event)');
+	diskEl.setAttribute('draggable', 'false');
 	diskEl.innerText = disk.index;
 	if (disk.index === 1) {
 		diskEl = makeDraggable(diskEl);
@@ -109,8 +110,12 @@ function createDiskElement(disk) {
 function makeDraggable(el) {
 	el.classList.add('top-disk');
 	el.setAttribute('draggable', 'true');
-	el.setAttribute('ondragstart', 'onDragStart(event)');
-	el.setAttribute('ondragend', 'onDragEnd(event)');
+	return el;
+}
+
+function makeUnDraggable(el) {
+	el.classList.remove('top-disk');
+	el.setAttribute('draggable', 'false');
 	return el;
 }
 
@@ -166,7 +171,7 @@ function init(currentLevel) {
 	// adjust the rods height
 	Array.from(document.getElementsByClassName('rod')).forEach((rod, i) => {
 		rod.setAttribute('id', TOWERS_NAMES[i] + '-rod');
-		rod.style.height = (currentLevel) * DISK_HEIGHT + PADDING + 'px';
+		rod.style.height = currentLevel * DISK_HEIGHT + PADDING + 'px';
 	});
 
 	// create disks
@@ -202,9 +207,11 @@ function onDragStart(ev) {
 	if (!Boolean(timerInterval)) runTimer(true);
 	// Log the origin tower
 	fromTowerEl = document.getElementById(ev.target.parentElement.id);
+	// console.log(fromTowerEl)
 	// get the disk data (html, id)
 	ev.dataTransfer.setData('text/html', ev.target.outerHTML);
 	ev.dataTransfer.setData('text', ev.target.id);
+	console.log('dragged disk:', ev.target.id);
 	ev.dataTransfer.effectAllowed = 'move';
 }
 
@@ -252,13 +259,18 @@ function onDrop(ev) {
 			console.log('valid move');
 			// update towers state array - move the disk from 'fromId' to 'toId'
 			towersState[toId].unshift(towersState[fromId].shift());
+			// Make the bottom disk undraggable (if there is one)
+			if (towersState[toId].length > 1) {
+				console.log('make', towersState[toId][1], 'undraggable');
+				makeUnDraggable(document.getElementById(towersState[toId][1]));
+			}
 			// *** check for end of game (all the disks are in the last tower)
 			if (towersState[LAST_TOWER].length === currentLevel) {
 				console.log('GAME END');
 				// stop the timer
 				runTimer(false);
 			} else {
-				console.log('not yet');
+				// console.log('not yet');
 			}
 			// Update moves counter
 			moveEl.innerText = ++movesCounter;
@@ -270,6 +282,7 @@ function onDrop(ev) {
 			// *** show message
 			displayMessage('Disks allowed on top of bigger disks only', 'red');
 		}
+		console.log(towersState);
 	}
 }
 
@@ -298,7 +311,7 @@ function displayLevelSelect() {
 	}
 	selectLevel.appendChild(selBtnDiv);
 	document.body.prepend(selectLevel);
-	console.log(selectLevel);
+	// console.log(selectLevel);
 }
 
 // --- Event Listeners ---
@@ -337,7 +350,7 @@ document.body.addEventListener('click', (event) => {
 	}
 	// If level selection button was clicked
 	if (event.target.parentElement.id === 'sel-btn-container') {
-		console.log(event.target.dataset.level);
+		// console.log(event.target.dataset.level);
 		// update current level variable
 		currentLevel = parseInt(event.target.dataset.level);
 		document.getElementById('select-level-body').remove();

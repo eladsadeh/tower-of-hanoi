@@ -199,8 +199,12 @@ h2 {
 	align-items: center;
 	padding: 6px 30px;
 }
+/* --- Google Icons --- */
 .material-icons#pause-btn {
 	font-size: 28px;
+}
+.material-icons-outlined {
+	font-size: 35px;
 }
 
 #pause-btn {
@@ -232,14 +236,10 @@ h2 {
 	flex-direction: column;
 	justify-content: flex-end;
 	align-items: center;
-	/* background-image: url(./images/rod.png);
-	background-repeat: no-repeat;
-	background-position: center; */
 }
 
 .rod {
 	border: solid var(--bg-color);
-	/* border: solid black; */
 	/* background: var(--rod-color); */
 	background-image: linear-gradient(
 		to right,
@@ -249,8 +249,8 @@ h2 {
 	);
 	border-radius: 35px 35px 0 0;
 	border-width: 25px 25px 0 25px;
-	/* height: 200px; */
 	width: 25px;
+	/* height is updated by JS */
 	height: 100px;
 	margin: 20px 20px 0 20px;
 	position: absolute;
@@ -259,8 +259,8 @@ h2 {
 
 .disk {
 	/* border: 2px solid yellowgreen; */
-	box-shadow: 1px 1px 10px 1px rgb(223, 219, 25) inset;
-	box-shadow: 1px 1px 10px 1px var(--bg-color) inset;
+	/* box-shadow: 1px 1px 10px 1px rgb(223, 219, 25) inset; */
+	box-shadow: 0px 0px 10px 1px var(--bg-color) inset;
 	height: 30px;
 	border-radius: 10px;
 	display: inline-block;
