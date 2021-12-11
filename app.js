@@ -35,8 +35,7 @@ let timeCounter = '';
 let timerInterval = '';
 // Current dificulty level
 let currentLevel = DEFAULT_LEVEL;
-// width of smallest disk in px
-let minSize = 80 - (currentLevel - 1) * 10;
+
 
 // --- CLASSes ---
 // Disk (location, color, size)
@@ -80,7 +79,7 @@ function displayMessage(message, color, time = 5000) {
 // create array of disks using Disk class
 function createDisks(num) {
 	disks = [];
-	// const minSize = 80 - (num - 1) * 10;
+	const minSize = 80 - (num - 1) * 10;
 	for (i = 0; i < num; i++) {
 		disks.push(
 			new Disk(START_TOWER, i + 1, minSize + i * 10 + '%', DISKS_COLORS[i])
@@ -167,7 +166,7 @@ function init(currentLevel) {
 	// adjust the rods height
 	Array.from(document.getElementsByClassName('rod')).forEach((rod, i) => {
 		rod.setAttribute('id', TOWERS_NAMES[i] + '-rod');
-		rod.style.height = (currentLevel + 1) * DISK_HEIGHT + PADDING + 'px';
+		rod.style.height = (currentLevel) * DISK_HEIGHT + PADDING + 'px';
 	});
 
 	// create disks
@@ -267,35 +266,57 @@ function onDrop(ev) {
 			const data = ev.dataTransfer.getData('text');
 			ev.target.parentElement.prepend(document.getElementById(data));
 		} else {
-			console.log('invalid move!');
+			// console.log('invalid move!');
 			// *** show message
 			displayMessage('Disks allowed on top of bigger disks only', 'red');
 		}
 	}
 }
 
-// Check for end of game
-// Show 'About' modal
 // Show level selection modal
+//create modal and insert it as first child of body
+function displayLevelSelect() {
+	const selectLevel = document.createElement('div');
+	selectLevel.setAttribute('id', 'select-level-body');
+	const selBtnDiv = document.createElement('div');
+	selBtnDiv.setAttribute('id', 'select-level-modal');
+	const p = document.createElement('p');
+	p.setAttribute('id', 'sel-lvl-title');
+	p.innerText = 'Select number of disks';
+	selBtnDiv.appendChild(p);
+	const selBtnContainer = document.createElement('div');
+	selBtnContainer.setAttribute('id', 'sel-btn-container');
+	selBtnDiv.appendChild(selBtnContainer);
+	for (i = 2; i < DISKS_COLORS.length; i++) {
+		const btn = document.createElement('button');
+		btn.setAttribute('id', 'lvl-btn-' + i + 1);
+		btn.setAttribute('class', 'lvl-btn');
+		btn.setAttribute('data-level', i + 1);
+		btn.style.backgroundColor = DISKS_COLORS[i];
+		btn.innerText = i + 1;
+		selBtnContainer.appendChild(btn);
+	}
+	selectLevel.appendChild(selBtnDiv);
+	document.body.prepend(selectLevel);
+	console.log(selectLevel);
+}
 
 // --- Event Listeners ---
 
 // Click on main game board
-mainEl.addEventListener('click', (event) => {
+// mainEl.addEventListener('click', (event) => {
+document.body.addEventListener('click', (event) => {
 	event.preventDefault();
-	console.log('Main board was clicked', event.target.id);
+	console.log(event.target.id, 'was clicked');
 	switch (event.target.id) {
 		case 'reset-btn':
 			init(currentLevel);
 			break;
 		case 'pause-btn':
-			displayMessage(
-				'Timer will continue when you make your next move',
-				'blue'
-			);
+			displayMessage('Make your next move to continue', 'brown');
 			runTimer(false);
 			break;
-		case 'about-btn':
+		case 'about-btn': // Show 'About' modal
 			document.getElementById('about-container').classList.toggle('hidden');
 			break;
 		case 'close-about-btn':
@@ -309,9 +330,18 @@ mainEl.addEventListener('click', (event) => {
 				document.getElementById('about-more').classList.add('hidden');
 				document.getElementById('read-more-btn').innerText = 'Read More';
 			}
-			// document.getElementById('read-more-btn').innerText = 'Read Less';
-
 			break;
+		case 'level-btn':
+			displayLevelSelect();
+			break;
+	}
+	// If level selection button was clicked
+	if (event.target.parentElement.id === 'sel-btn-container') {
+		console.log(event.target.dataset.level);
+		// update current level variable
+		currentLevel = parseInt(event.target.dataset.level);
+		document.getElementById('select-level-body').remove();
+		init(currentLevel);
 	}
 });
 

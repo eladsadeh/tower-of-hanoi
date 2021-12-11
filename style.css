@@ -1,43 +1,74 @@
 /* variables */
 :root {
-	--rod-color: rgb(58, 27, 5);
+	--rod-color: rgb(28, 15, 6);
 	--bg-color: rgb(251, 248, 232);
 }
 body {
 	/* border: 3px solid black; */
+	background-color: var(--rod-color);
 	margin: 0 auto;
 	max-width: 800px;
-	text-align: center;
+	/* text-align: center; */
 	font-family: 'Ubuntu', Helvetica, sans-serif;
 }
 header {
 	/* border: 2px solid green; */
 	/* display: flex; */
 	justify-content: center;
+	text-align: center;
 }
+h1 {
+}
+
+#title {
+	/* border: 1px solid gray; */
+	display: inline-block;
+	color: white;
+	font-size: 2.5rem;
+}
+
 main {
-	overflow: auto;
+	/* overflow: auto; */
 	/* border: 3px solid orange; */
 	background-color: var(--bg-color);
 	border-radius: 12px;
+	/* padding: 20px; */
 }
 
+button {
+	cursor: pointer;
+	background-color: var(--rod-color);
+	color: var(--bg-color);
+	font-size: 16px;
+	padding: 12px;
+	border: none;
+	border-radius: 6px;
+	box-shadow: 0 0 8px inset;
+	margin: 10px 20px;
+}
+
+main.about {
+}
+
+/* --- About modal ----------- */
 #about-container {
 	z-index: 20;
 	min-height: 100%;
+	width: 100%;
 	/* border: 2px solid red; */
 	position: absolute;
+	left: 0%;
 	background-color: rgba(34, 31, 4, 0.701);
-	box-sizing:border-box;
+	box-sizing: border-box;
 }
 #about-box {
 	/* height:inherit; */
-	background-color: white;
-	margin: 2rem 6rem;
+	background-color: var(--bg-color);
+	margin: 5rem 6rem;
 	padding: 20px 30px;
 	text-align: left;
 	border-radius: 8px;
-	box-shadow: tan;
+	box-shadow: 8px 8px 5px var(--rod-color);
 	font-size: 1rem;
 	line-height: 1.3;
 }
@@ -48,10 +79,49 @@ main {
 	border-radius: 12px;
 	padding: 20px;
 }
+/* ----------------------- */
+/* Level selection modal */
+#select-level-body {
+	z-index: 10;
+	min-height: 100%;
+	width: 100%;
+	position: absolute;
+	/* left: 0%; */
+	background-color: rgba(34, 31, 4, 0.51);
+	box-sizing: border-box;
+}
+#sel-lvl-title {
+	color: var(--rod-color);
+	font-size: 24px;
+}
+#select-level-modal {
+	/* height:inherit; */
+	background-color: var(--bg-color);
+	margin: 5rem 6rem;
+	padding: 20px;
+	text-align: center;
+	border-radius: 8px;
+	box-shadow: 8px 8px 5px var(--rod-color);
+	font-size: 1rem;
+	line-height: 1.3;
+}
+
+.lvl-btn {
+	padding: 10px 15px;
+	color: black;
+	margin: 8px;
+	min-width: 30px;
+	font-size: 24px;
+	cursor: pointer;
+	border: none;
+	border-radius: 5px;
+	box-shadow: 0 0 8px rgb(72, 45, 7) inset;
+}
+/* ---------------------- */
 
 .link {
 	/* display: block; */
-	text-decoration: none ;
+	text-decoration: none;
 	position: relative;
 	right: 0;
 }
@@ -65,6 +135,11 @@ main {
 
 #base {
 	background-color: var(--rod-color);
+	background-image: linear-gradient(
+		rgb(206, 112, 10),
+		rgb(118, 62, 41),
+		var(--rod-color) 30%
+	);
 	border-radius: 15px 15px 5px 5px;
 	min-height: 30px;
 	color: whitesmoke;
@@ -75,6 +150,20 @@ main {
 #title {
 	/* border: 1px solid gray; */
 	display: inline-block;
+	color: var(--bg-color);
+	font-size: 2.5rem;
+	margin: 20px 0 0 0;
+}
+
+.level-btn {
+	padding: 10px;
+	margin: 5px;
+	min-width: 30px;
+}
+
+h2 {
+	color: var(--bg-color);
+	/* margin: 0; */
 }
 
 #main-board {
@@ -85,6 +174,7 @@ main {
 	/* border: 2px solid red; */
 	margin: 0 auto;
 	width: 90%;
+
 	/* height: 400px; */
 }
 
@@ -99,7 +189,7 @@ main {
 	width: 50%;
 	height: 20px;
 	border: none;
-	
+	background-color: var(--bg-color);
 }
 /* Lower Panel */
 #lower-panel {
@@ -150,7 +240,13 @@ main {
 .rod {
 	border: solid var(--bg-color);
 	/* border: solid black; */
-	background: var(--rod-color);
+	/* background: var(--rod-color); */
+	background-image: linear-gradient(
+		to right,
+		rgb(206, 112, 10),
+		rgb(118, 62, 41),
+		var(--rod-color) 50%
+	);
 	border-radius: 35px 35px 0 0;
 	border-width: 25px 25px 0 25px;
 	/* height: 200px; */
@@ -164,15 +260,32 @@ main {
 .disk {
 	/* border: 2px solid yellowgreen; */
 	box-shadow: 1px 1px 10px 1px rgb(223, 219, 25) inset;
+	box-shadow: 1px 1px 10px 1px var(--bg-color) inset;
 	height: 30px;
-	border-radius: 8px;
+	border-radius: 10px;
 	display: inline-block;
 	z-index: 1;
 	vertical-align: middle;
+	text-align: center;
 	line-height: 2;
 }
 
 .top-disk:hover {
 	border: 2px solid green;
 	cursor: grab;
+}
+
+#base {
+	background-color: var(--rod-color);
+	background-image: linear-gradient(
+		rgb(206, 112, 10),
+		rgb(118, 62, 41),
+		var(--rod-color) 30%
+	);
+	border-radius: 15px 15px 5px 5px;
+	min-height: 30px;
+	color: whitesmoke;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
 }
