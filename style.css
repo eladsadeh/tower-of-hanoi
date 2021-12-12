@@ -110,9 +110,12 @@ button {
 	margin-right: auto;
 	/* max-width: 70%; */
 	background-color: white;
-	display: block;
+	/* display: block; */
 	padding: 10px 20px;
 	border-radius: 6px;
+	background-color: rgb(255, 255, 249);
+		box-shadow: 0px 0px 5px var(--rod-color);
+
 }
 #quote-content {
 	font-style: italic;
