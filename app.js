@@ -1,7 +1,7 @@
 // console.log('Hello from app JS');
 // --- CONSTANTS ---
 // Default level
-const DEFAULT_LEVEL = 2;
+const DEFAULT_LEVEL = 3;
 // Style variables
 const DISKS_COLORS = [
 	'orange',
