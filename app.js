@@ -167,10 +167,10 @@ function endGame() {
 	let m = '';
 	if (movesCounter === 2 ** currentLevel - 1) {
 		t = 'Perfect!';
-		m = `You completed the game in ${movesCounter} moves. \n This is the minimum number of moves possible!\n Try the next level`;
+		m = `Game completed in ${movesCounter} moves. \n This is the minimum number of moves possible!\n Try the next level`;
 	} else {
 		t = 'Well Done!';
-		m = `You completed the game in ${movesCounter} moves.\n It is possible to do it in ${
+		m = `Game completed in ${movesCounter} moves.\n It is possible to do it in ${
 			2 ** currentLevel - 1
 		} moves.\n Would you like to try again?`;
 	}
@@ -224,6 +224,27 @@ function init(currentLevel) {
 	disks.forEach((disk) => {
 		towersState[START_TOWER].push('disk-' + disk.index);
 	});
+}
+
+// --- Fetch and add quote for end of game ---- //
+// async function fetchQuote() {
+function fetchQuote(contentEl, authorEl) {
+	const apiUrl = 'https://api.quotable.io/random?tags=inspirational';
+	let quote = {};
+	fetch(apiUrl)
+		.then((response) => response.json())
+		.then((response) => {
+			authorEl.innerText = '~' + response.author;
+			contentEl.innerText = response.content;
+		})
+		.catch((response) => {
+			// console.log('cant get response');
+		});
+
+	// var data = await response.json();
+	// console.log(data.author,':', data.content);
+	// const quote = { 'author': data.author, 'quete': data.content };
+	// console.log(quote);
 }
 
 // --- Drag and Drop handlers ---
@@ -345,6 +366,17 @@ function displayGameEndModal(title, message) {
 	t.setAttribute('id', 'game-end-title');
 	t.innerText = title;
 	gameEndModalEl.appendChild(t);
+	// add quote contentent and author and fetch a quote
+	const qDivEl = document.createElement('div');
+	qDivEl.setAttribute('id', 'quote-wrapper');
+	const qContentEl = document.createElement('span');
+	qContentEl.setAttribute('id', 'quote-content');
+	qDivEl.appendChild(qContentEl);
+	const qAuthorEl = document.createElement('p');
+	qAuthorEl.setAttribute('id', 'quote-author');
+	qDivEl.appendChild(qAuthorEl);
+	gameEndModalEl.appendChild(qDivEl);
+	fetchQuote(qContentEl, qAuthorEl);
 	// add the message to the modal
 	const m = document.createElement('p');
 	m.setAttribute('id', 'game-end-message');
