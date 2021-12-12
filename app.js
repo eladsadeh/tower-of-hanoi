@@ -3,7 +3,17 @@
 // Default level
 const DEFAULT_LEVEL = 3;
 // Style variables
-const DISKS_COLORS = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
+const DISKS_COLORS = [
+	'orange',
+	'forestgreen',
+	'mediumblue',
+	'indigo',
+	'firebrick',
+	'mediumseagreen',
+	'purple',
+	'navy',
+	'darkcyan',
+];
 const DISK_HEIGHT = 30; // Disk height in px
 const PADDING = 50;
 // towers ID
@@ -122,6 +132,15 @@ function makeUnDraggable(el) {
 	return el;
 }
 
+function secondsToString(time) {
+	const minutes = Math.floor(time / 60);
+	const seconds = minutes ? time % 60 : time;
+	return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(
+		2,
+		'0'
+	)}`;
+}
+
 function runTimer(run) {
 	// ** Timer start when the player move the first disk
 
@@ -131,7 +150,7 @@ function runTimer(run) {
 	if (run) {
 		// console.log('start interval');
 		timerInterval = setInterval(() => {
-			timeEl.innerHTML = ++timeCounter;
+			timeEl.innerHTML = secondsToString(++timeCounter);
 		}, 1000);
 	} else {
 		// console.log('clear interval');
@@ -177,14 +196,12 @@ function init(currentLevel) {
 		currentLevel * DISK_HEIGHT + 3 * PADDING + 'px';
 	// update minimal number of moves
 	// document.getElementById('min-moves').innerHTML = 2 ** currentLevel - 1;
-    
-	displayMessage(
-		`Minimum steps: ${2 ** currentLevel - 1}`,
-		5000
-	);
+
+	displayMessage(`Minimum steps: ${2 ** currentLevel - 1}`, 5000);
 	// reset time counter
 	timeCounter = 0;
-	timeEl.innerText = timeCounter;
+	timeEl.innerText = secondsToString(timeCounter);
+
 	// reset moves
 	movesCounter = 0;
 	moveEl.innerText = movesCounter;
@@ -403,8 +420,8 @@ function displayGameEndModal(title, message) {
 // mainEl.addEventListener('click', (event) => {
 document.body.addEventListener('click', (event) => {
 	event.preventDefault();
-	console.log(event.target.id, 'was clicked');
-	console.log('The parent is:', event.target.parentElement.id);
+	// console.log(event.target.id, 'was clicked');
+	// console.log('The parent is:', event.target.parentElement.id);
 	switch (event.target.id) {
 		case 'reset-btn':
 			init(currentLevel);
