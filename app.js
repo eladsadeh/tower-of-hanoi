@@ -90,10 +90,11 @@ function displayMessage(message, time = 4000) {
 // create array of disks using Disk class
 function createDisks(num) {
 	disks = [];
-	const minSize = 80 - (num - 1) * 10;
+	const minSize = 40;
+	const step = 40 / (num - 1);
 	for (i = 0; i < num; i++) {
 		disks.push(
-			new Disk(START_TOWER, i + 1, minSize + i * 10 + '%', DISKS_COLORS[i])
+			new Disk(START_TOWER, i + 1, minSize + i * step + '%', DISKS_COLORS[i])
 		);
 	}
 	// console.log(disks);
@@ -167,7 +168,7 @@ function endGame() {
 	let m = '';
 	if (movesCounter === 2 ** currentLevel - 1) {
 		t = 'Perfect!';
-		m = `You completed the game in ${movesCounter} moves. \n This is the minimal number of moves possible!.\n Try the next level`;
+		m = `You completed the game in ${movesCounter} moves. \n This is the minimum number of moves possible!\n Try the next level`;
 	} else {
 		t = 'Well Done!';
 		m = `You completed the game in ${movesCounter} moves.\n It is possible to do it in ${

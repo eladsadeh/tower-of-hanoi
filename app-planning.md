@@ -1,11 +1,3 @@
-## Project Choice (Tell us which project you're doing!)
-
-- [ ] Flash Cards
-- [ ] Trivia (Self-scoring)
-- [ ] Spaceman
-- [x] Tower of Hanoi
-- [ ] Simon
-
 ## Project Description 
 
 The Tower of Hanoi is a mathematical game or puzzle consisting of three rods and a number of disks of various diameters, which can slide onto any rod. The puzzle begins with the disks stacked on one rod in order of decreasing size, the smallest at the top. The objective of the puzzle is to move the entire stack to the last rod, obeying the following rules:
@@ -42,3 +34,12 @@ Apart from moving the stack to the last rod, the goal is to do it with minimum n
 - As a player, I want see records of past games.
 - As a player, I want to be able to run a "show me" game solution so I can learn how to solve the puzzle.
 
+## Wireframes
+
+### Main view
+
+![Main view](images/main-view.png)
+
+### About the game
+
+![About](images/about.png)
