@@ -358,8 +358,9 @@ h2 {
 }
 
 .rod {
-	border: solid var(--bg-color);
-	/* background: var(--rod-color); */
+	border-color: var(--bg-color);
+	border-style: solid;
+	background: var(--rod-color);
 	background-image: linear-gradient(
 		to right,
 		/* rgb(206, 149, 89), */ rgb(139, 100, 86),
@@ -373,6 +374,14 @@ h2 {
 	margin: 20px 20px 0 20px;
 	position: absolute;
 	z-index: 0;
+}
+
+#mid-tower-rod {
+	/* border-color: green; */
+	/* box-shadow: 0px 0px 10px 1px green inset; */
+	/* background-color: green; */
+	/* border-color: rgb(177, 251, 168); */
+	box-shadow: 0px 0px 10px 10px green;
 }
 
 .disk {

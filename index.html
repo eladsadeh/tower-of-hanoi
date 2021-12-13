@@ -88,13 +88,13 @@
         </div>
         <div id='main-board'>
             <div id='towers'>
-                <div id='left-tower' class='tower' data-name='A' ondrop="onDrop(event)" ondragover="return false">
+                <div id='left-tower' class='tower' data-name='A' ondrop="onDrop(event)" ondragover="return false" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)">
                     <span id="rod-A" class='rod'></span>
                 </div>
-                <div id='mid-tower' class='tower' data-name='B' ondrop="onDrop(event)" ondragover="return false">
-                    <span id="rod-B" class='rod'></span>
+                <div id='mid-tower' class='tower' data-name='B' ondrop="onDrop(event)" ondragover="return false" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)">
+                    <span id="mid-tower-rod" class='rod'></span>
                 </div>
-                <div id='right-tower' class='tower' data-name='C' ondrop="onDrop(event)" ondragover="onDragOver(event)">
+                <div id='right-tower' class='tower' data-name='C' ondrop="onDrop(event)" ondragover="return false" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)">
                     <div id="rod-C" class='rod'></div>
                 </div>
             </div>
