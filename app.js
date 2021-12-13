@@ -270,7 +270,7 @@ function onDragStart(ev) {
 
 function onDragEnter(ev) {
 	// ev.preventDefault();
-	console.log('Drag enter', ev.target.id);
+	// console.log('Drag enter', ev.target.id);
 	const toId = ev.target.parentElement.id;
 	// IF entering a rod AND it's not the same rod
 	if (ev.target.id.includes('rod')) {
@@ -281,18 +281,21 @@ function onDragEnter(ev) {
 		) {
 			// console.log('Its a valid drop target');
 			ev.target.classList.add('drop-target');
+		} else {
+			ev.target.classList.add('drop-disable');
 		}
 	}
 	// add class to highlight the rod
 }
 function onDragLeave(ev) {
 	// ev.preventDefault();
-	console.log('Drag leave', ev.target.id);
+	// console.log('Drag leave', ev.target.id);
 	// IF leaving a rod
 	if (ev.target.id.includes('rod')) {
 		// remove class 'drop-target'
 		// console.log('removing drop-target class');
 		ev.target.classList.remove('drop-target');
+		ev.target.classList.remove('drop-disable');
 	}
 }
 
@@ -317,6 +320,7 @@ function onDrop(ev) {
 			moveEl.innerText = ++movesCounter;
 			// Remove the hightlight of the rod
 			ev.target.classList.remove('drop-target');
+			ev.target.classList.remove('drop-disable');
 			// move the html element
 			const data = ev.dataTransfer.getData('text');
 			ev.target.parentElement.prepend(document.getElementById(data));
@@ -336,6 +340,7 @@ function onDrop(ev) {
 		} else {
 			// *** show message
 			displayMessage('Lower disk must be bigger');
+			ev.target.classList.remove('drop-disable');
 		}
 	}
 }
