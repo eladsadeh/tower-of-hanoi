@@ -270,7 +270,7 @@ function onDragStart(ev) {
 
 function onDragEnter(ev) {
 	// ev.preventDefault();
-	// console.log('Drag enter', ev.target.id);
+	console.log('Drag enter', ev.target.id);
 	const toId = ev.target.parentElement.id;
 	// IF entering a rod AND it's not the same rod
 	if (ev.target.id.includes('rod')) {
@@ -287,7 +287,7 @@ function onDragEnter(ev) {
 }
 function onDragLeave(ev) {
 	// ev.preventDefault();
-	// console.log('Drag leave', ev.target.id);
+	console.log('Drag leave', ev.target.id);
 	// IF leaving a rod
 	if (ev.target.id.includes('rod')) {
 		// remove class 'drop-target'
