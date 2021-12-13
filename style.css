@@ -377,11 +377,11 @@ h2 {
 }
 
 .drop-target {
-	/* border-color: green; */
-	/* box-shadow: 0px 0px 10px 1px green inset; */
-	/* background-color: green; */
-	/* border-color: rgb(177, 251, 168); */
 	box-shadow: 0px 0px 10px 10px green;
+}
+
+.drop-disable {
+	box-shadow: 0px 0px 10px 10px red;
 }
 
 .disk {
