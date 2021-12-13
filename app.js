@@ -102,9 +102,8 @@ function createDiskElement(disk) {
 	diskEl.style.width = disk.size;
 	diskEl.setAttribute('id', 'disk-' + disk.index);
 	diskEl.setAttribute('class', 'disk');
-	diskEl.setAttribute('data-size', disk.index);
 	diskEl.setAttribute('ondragstart', 'onDragStart(event)');
-	diskEl.setAttribute('ondragend', 'onDragEnd(event)');
+	// diskEl.setAttribute('ondragend', 'onDragEnd(event)');
 	diskEl.setAttribute('draggable', 'false');
 	diskEl.innerText = disk.index;
 	if (disk.index === 1) {
@@ -269,31 +268,16 @@ function onDragStart(ev) {
 	ev.dataTransfer.effectAllowed = 'move';
 }
 
-function onDragEnd(ev) {
-	// console.log('drag end', ev.target.id, ev.target.parentElement.id);
-	ev.preventDefault();
-	// console.log(ev.target);
-	const topDiskInFrom = document
-		.getElementById(fromTowerId)
-		.querySelector('.disk');
-	if (topDiskInFrom !== null) {
-		makeDraggable(topDiskInFrom);
-	}
-	// console.log('drag-end:', ev.target.id, ' in ', ev.target.parentElement.id);
-	ev.dataTransfer.dropEffect = 'move';
-}
-
 function onDragEnter(ev) {
 	// ev.preventDefault();
 	// console.log('Drag enter', ev.target.id);
-	const fromId = fromTowerId;
 	const toId = ev.target.parentElement.id;
 	// IF entering a rod AND it's not the same rod
 	if (ev.target.id.includes('rod')) {
 		// AND IF its a valid drop target (empty or bigger disk)
 		if (
 			!towersState[toId].length ||
-			towersState[fromId][0] < towersState[toId][0]
+			towersState[fromTowerId][0] < towersState[toId][0]
 		) {
 			// console.log('Its a valid drop target');
 			ev.target.classList.add('drop-target');
@@ -320,15 +304,15 @@ function onDrop(ev) {
 		fromTowerId !== ev.target.parentElement.id
 	) {
 		ev.preventDefault();
-		const fromId = fromTowerId;
 		const toId = ev.target.parentElement.id;
 		// Check if its OK to drop (either no disks or the top disk is bigger)
 		if (
 			!towersState[toId].length ||
-			towersState[fromId][0] < towersState[toId][0]
+			towersState[fromTowerId][0] < towersState[toId][0]
 		) {
-			// update towers state array - move the disk from 'fromId' to 'toId'
-			towersState[toId].unshift(towersState[fromId].shift());
+			// Its a valid drop !!
+			// update towers state array - move the disk from origin tower to destination tower
+			towersState[toId].unshift(towersState[fromTowerId].shift());
 			// Update moves counter
 			moveEl.innerText = ++movesCounter;
 			// Remove the hightlight of the rod
@@ -339,6 +323,11 @@ function onDrop(ev) {
 			// Make the bottom disk undraggable (if there is one)
 			if (towersState[toId].length > 1) {
 				makeUnDraggable(document.getElementById(towersState[toId][1]));
+			}
+			// Make the top disk in 'from' tower draggable
+			if (towersState[fromTowerId].length > 0) {
+				console.log('Make', towersState[fromTowerId][0], 'draggable');
+				makeDraggable(document.getElementById(towersState[fromTowerId][0]));
 			}
 			// *** check for end of game (all the disks are in the last tower)
 			if (towersState[endTower].length === currentLevel) {
