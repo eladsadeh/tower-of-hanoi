@@ -35,7 +35,7 @@ The minimum number of steps to finish the game is 2^n - 1 (n is the number of di
 
 - The steps counter show the number of disk moves you made.
 
-- When all the disks are at the right most rod (C), you'll see a popup window announcing your success with the option to restart the game or move to the next level (on not).
+- When all the disks are at the right most rod (C), you'll see a popup window announcing your success with the option to restart the game or move to the next level (on not). A random inspirational quote will be displayed.
 
 ![End of Game popup](images/end-game.png)
 
@@ -50,5 +50,3 @@ The minimum number of steps to finish the game is 2^n - 1 (n is the number of di
 - 'Show-me' feature - The app will move the disks to the last rod with the minimal number of moves possible to show the player how to do it.
 
 - 'Guided Mode': When the player make a wrong move, the app will alert the player.
-
-- Show a random inspirational quote when the player complete the game.

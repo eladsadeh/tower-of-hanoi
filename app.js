@@ -419,8 +419,9 @@ function displayGameEndModal(title, message) {
 
 // Click on the window
 document.body.addEventListener('click', (event) => {
-	event.preventDefault();
+	// event.preventDefault();
 	// console.log(event.target.id, 'was clicked');
+	// console.log(event.target.checked);
 	// console.log('The parent is:', event.target.parentElement.id);
 	switch (event.target.id) {
 		case 'reset-btn':
@@ -449,6 +450,16 @@ document.body.addEventListener('click', (event) => {
 		case 'level-btn':
 			displayLevelSelect();
 			break;
+		case 'toggle-switch':
+			// console.log(event.target.checked);
+			const bg = getComputedStyle(document.documentElement).getPropertyValue(
+				'--bg-color'
+			);
+			const fg = getComputedStyle(document.documentElement).getPropertyValue(
+				'--rod-color'
+			);
+			document.documentElement.style.setProperty('--bg-color', fg);
+			document.documentElement.style.setProperty('--rod-color', bg);
 	}
 	if (event.target.parentElement.id === 'game-end-buttons') {
 		const id = event.target.id;
