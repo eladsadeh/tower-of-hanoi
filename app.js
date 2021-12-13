@@ -18,29 +18,22 @@ const DISK_HEIGHT = 30; // Disk height in px
 const PADDING = 50;
 // towers ID
 const TOWERS_NAMES = ['left-tower', 'mid-tower', 'right-tower'];
-const START_TOWER = TOWERS_NAMES[0];
-const AUX_TOWER = TOWERS_NAMES[1];
-const LAST_TOWER = TOWERS_NAMES[2];
 
 // --- Global variables ---
-// State of the towers
-const towersState = {};
+const startTower = TOWERS_NAMES[0];
+const auxTower = TOWERS_NAMES[1];
+const endTower = TOWERS_NAMES[2];
 
-// moves history array
-const movesHistory = [];
+const towersState = {}; // State of the towers
+const movesArray = []; // Hold minimum moves sequence
+const movesHistory = []; // Player moves history array
 
-// TO and FROM towers for disks move
-let fromTowerEl = '';
-let toTowerEl = '';
-// Disks objects (class)
-let disks = [];
-// moves counter
-let movesCounter = '';
-// timer
-let timeCounter = '';
+let fromTowerId = ''; // FROM tower ID for disks move
+let disks = []; // Disks objects (class)
+let movesCounter = ''; // moves counter
+let timeCounter = ''; // timer
 let timerInterval = '';
-// Current dificulty level
-let currentLevel = DEFAULT_LEVEL;
+let currentLevel = DEFAULT_LEVEL; // Current dificulty level
 
 // --- CLASSes ---
 // Disk (location, color, size)
@@ -94,7 +87,7 @@ function createDisks(num) {
 	const step = 40 / (num - 1);
 	for (i = 0; i < num; i++) {
 		disks.push(
-			new Disk(START_TOWER, i + 1, minSize + i * step + '%', DISKS_COLORS[i])
+			new Disk(startTower, i + 1, minSize + i * step + '%', DISKS_COLORS[i])
 		);
 	}
 	// console.log(disks);
@@ -222,15 +215,14 @@ function init(currentLevel) {
 		towersState[tower] = [];
 	});
 	disks.forEach((disk) => {
-		towersState[START_TOWER].push('disk-' + disk.index);
+		towersState[startTower].push('disk-' + disk.index);
 	});
 }
-let movesArray = [];
 
 // Function create array of moves that solve the game for n disks
 // Algorithm taken from www.tutorialspoint.com/data_structures_algorithms/tower_of_hanoi.htm
 
-function generateMoves(n, start = 'A', end = 'C', aux = 'B') {
+function generateMoves(n, start = startTower, end = endTower, aux = auxTower) {
 	// if n=1, move disk from start to end
 	if (n === 1) movesArray.push(`${start} -> ${end}`);
 	else {
@@ -269,8 +261,8 @@ function onDragStart(ev) {
 	// Start the timer if its not running
 	if (!Boolean(timerInterval)) runTimer(true);
 	// Log the origin tower
-	fromTowerEl = document.getElementById(ev.target.parentElement.id);
-	// console.log('drag start -', ev.target.id, 'from', fromTowerEl.id);
+	fromTowerId = ev.target.parentElement.id;
+	// console.log('drag start -', ev.target.id, 'from', fromTowerId);
 	// get the disk data (html, id)
 	ev.dataTransfer.setData('text/html', ev.target.outerHTML);
 	ev.dataTransfer.setData('text', ev.target.id);
@@ -281,7 +273,9 @@ function onDragEnd(ev) {
 	// console.log('drag end', ev.target.id, ev.target.parentElement.id);
 	ev.preventDefault();
 	// console.log(ev.target);
-	const topDiskInFrom = fromTowerEl.querySelector('.disk');
+	const topDiskInFrom = document
+		.getElementById(fromTowerId)
+		.querySelector('.disk');
 	if (topDiskInFrom !== null) {
 		makeDraggable(topDiskInFrom);
 	}
@@ -292,7 +286,7 @@ function onDragEnd(ev) {
 function onDragEnter(ev) {
 	// ev.preventDefault();
 	// console.log('Drag enter', ev.target.id);
-	const fromId = fromTowerEl.id;
+	const fromId = fromTowerId;
 	const toId = ev.target.parentElement.id;
 	// IF entering a rod AND it's not the same rod
 	if (ev.target.id.includes('rod')) {
@@ -323,10 +317,10 @@ function onDrop(ev) {
 	// IF the target is a rod AND its not the same rod
 	if (
 		ev.target.id.includes('rod') &&
-		fromTowerEl.id !== ev.target.parentElement.id
+		fromTowerId !== ev.target.parentElement.id
 	) {
 		ev.preventDefault();
-		const fromId = fromTowerEl.id;
+		const fromId = fromTowerId;
 		const toId = ev.target.parentElement.id;
 		// Check if its OK to drop (either no disks or the top disk is bigger)
 		if (
@@ -347,7 +341,7 @@ function onDrop(ev) {
 				makeUnDraggable(document.getElementById(towersState[toId][1]));
 			}
 			// *** check for end of game (all the disks are in the last tower)
-			if (towersState[LAST_TOWER].length === currentLevel) {
+			if (towersState[endTower].length === currentLevel) {
 				endGame();
 			}
 		} else {
