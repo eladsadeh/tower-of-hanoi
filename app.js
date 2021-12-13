@@ -225,12 +225,28 @@ function init(currentLevel) {
 		towersState[START_TOWER].push('disk-' + disk.index);
 	});
 }
+let movesArray = [];
+
+// Function create array of moves that solve the game for n disks
+// Algorithm taken from www.tutorialspoint.com/data_structures_algorithms/tower_of_hanoi.htm
+
+function generateMoves(n, start = 'A', end = 'C', aux = 'B') {
+	// if n=1, move disk from start to end
+	if (n === 1) movesArray.push(`${start} -> ${end}`);
+	else {
+		// move 'n-1' disk to aux
+		generateMoves(n - 1, start, aux, end);
+		// then move the last disk to end
+		movesArray.push(`${start} -> ${end}`);
+		// then move 'n-1' disks to end
+		generateMoves(n - 1, aux, end, start);
+	}
+	return movesArray;
+}
 
 // --- Fetch and add quote for end of game ---- //
-// async function fetchQuote() {
 function fetchQuote(contentEl, authorEl) {
 	const apiUrl = 'https://api.quotable.io/random?tags=inspirational';
-	let quote = {};
 	fetch(apiUrl)
 		.then((response) => response.json())
 		.then((response) => {
@@ -240,11 +256,6 @@ function fetchQuote(contentEl, authorEl) {
 		.catch((response) => {
 			// console.log('cant get response');
 		});
-
-	// var data = await response.json();
-	// console.log(data.author,':', data.content);
-	// const quote = { 'author': data.author, 'quete': data.content };
-	// console.log(quote);
 }
 
 // --- Drag and Drop handlers ---
@@ -259,6 +270,7 @@ function onDragStart(ev) {
 	if (!Boolean(timerInterval)) runTimer(true);
 	// Log the origin tower
 	fromTowerEl = document.getElementById(ev.target.parentElement.id);
+	// console.log('drag start -', ev.target.id, 'from', fromTowerEl.id);
 	// get the disk data (html, id)
 	ev.dataTransfer.setData('text/html', ev.target.outerHTML);
 	ev.dataTransfer.setData('text', ev.target.id);
@@ -266,6 +278,7 @@ function onDragStart(ev) {
 }
 
 function onDragEnd(ev) {
+	// console.log('drag end', ev.target.id, ev.target.parentElement.id);
 	ev.preventDefault();
 	// console.log(ev.target);
 	const topDiskInFrom = fromTowerEl.querySelector('.disk');
@@ -276,15 +289,40 @@ function onDragEnd(ev) {
 	ev.dataTransfer.dropEffect = 'move';
 }
 
-function onDragOver(ev) {
-	ev.preventDefault();
+function onDragEnter(ev) {
+	// ev.preventDefault();
+	// console.log('Drag enter', ev.target.id);
+	const fromId = fromTowerEl.id;
+	const toId = ev.target.parentElement.id;
+	// IF entering a rod AND it's not the same rod
+	if (ev.target.id.includes('rod')) {
+		// AND IF its a valid drop target (empty or bigger disk)
+		if (
+			!towersState[toId].length ||
+			towersState[fromId][0] < towersState[toId][0]
+		) {
+			// console.log('Its a valid drop target');
+			ev.target.classList.add('drop-target');
+		}
+	}
+	// add class to highlight the rod
+}
+function onDragLeave(ev) {
+	// ev.preventDefault();
+	// console.log('Drag leave', ev.target.id);
+	// IF leaving a rod
+	if (ev.target.id.includes('rod')) {
+		// remove class 'drop-target'
+		// console.log('removing drop-target class');
+		ev.target.classList.remove('drop-target');
+	}
 }
 
 function onDrop(ev) {
 	// console.log('drop', ev.target.id, 'in: ', ev.target.parentElement.id);
 	// IF the target is a rod AND its not the same rod
 	if (
-		ev.target.classList.contains('rod') &&
+		ev.target.id.includes('rod') &&
 		fromTowerEl.id !== ev.target.parentElement.id
 	) {
 		ev.preventDefault();
@@ -295,15 +333,15 @@ function onDrop(ev) {
 			!towersState[toId].length ||
 			towersState[fromId][0] < towersState[toId][0]
 		) {
-			// console.log('valid move');
 			// update towers state array - move the disk from 'fromId' to 'toId'
 			towersState[toId].unshift(towersState[fromId].shift());
 			// Update moves counter
 			moveEl.innerText = ++movesCounter;
+			// Remove the hightlight of the rod
+			ev.target.classList.remove('drop-target');
 			// move the html element
 			const data = ev.dataTransfer.getData('text');
 			ev.target.parentElement.prepend(document.getElementById(data));
-
 			// Make the bottom disk undraggable (if there is one)
 			if (towersState[toId].length > 1) {
 				makeUnDraggable(document.getElementById(towersState[toId][1]));
@@ -314,7 +352,7 @@ function onDrop(ev) {
 			}
 		} else {
 			// *** show message
-			displayMessage('Disks Not allowed on top of a smaller disks');
+			displayMessage('Lower disk must be bigger');
 		}
 	}
 }
