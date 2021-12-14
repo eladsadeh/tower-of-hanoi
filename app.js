@@ -1,4 +1,3 @@
-// console.log('Hello from app JS');
 // --- CONSTANTS ---
 // Default level
 const DEFAULT_LEVEL = 3;
@@ -15,7 +14,7 @@ const DISKS_COLORS = [
 	'darkcyan',
 ];
 const DISK_HEIGHT = 30; // Disk height in px
-const PADDING = 50;
+const PADDING = 50; // Padding for the rods height
 // towers ID
 const TOWERS_NAMES = ['left-tower', 'mid-tower', 'right-tower'];
 
@@ -38,11 +37,21 @@ let currentLevel = DEFAULT_LEVEL; // Current dificulty level
 // --- CLASSes ---
 // Disk (location, color, size)
 class Disk {
-	constructor(location, index, size, color) {
-		this.location = location;
+	constructor(index, size, color) {
+		this.id = 'disk-' + index;
 		this.index = index;
 		this.size = size;
 		this.color = color;
+	}
+	// move this disk to destination 'to' (to is the ID of the destination)
+	moveTo(to) {
+		// console.log('moving', this.id, 'to', to);
+		// Save the element that is moving
+		const el = document.getElementById(this.id);
+		// remove the disk from its current location
+		document.getElementById(this.id).remove();
+		// add the disk to destination tower
+		document.getElementById(to).prepend(el);
 	}
 }
 
@@ -56,7 +65,7 @@ const moveEl = document.getElementById('move-counter');
 const messageEl = document.getElementById('message');
 // --- Elements needed for event listeners
 // Game board
-const mainEl = document.getElementById('game');
+// const mainEl = document.getElementById('game');
 // Each individual towers
 const leftTowerEl = document.getElementById('left-tower');
 const midTowerEl = document.getElementById('mid-tower');
@@ -64,16 +73,6 @@ const rightTowerEl = document.getElementById('right-tower');
 const towers = [leftTowerEl, midTowerEl, rightTowerEl];
 
 // --- Helper functions (do little things) ---
-
-function readText() {
-	const reader = new FileReader();
-	// reader.onload = function (evt) {
-	// 		console.log(evt.target.result);
-	// 	};
-	const content = reader.readAsText('/test.html');
-	// console.log(content);
-	// console.log(text.readAsText('./test.html'));
-}
 // show message on game board
 function displayMessage(message, time = 4000) {
 	messageEl.innerText = message;
@@ -83,14 +82,12 @@ function displayMessage(message, time = 4000) {
 // create array of disks using Disk class
 function createDisks(num) {
 	disks = [];
+	// minSize and step are used to keep the first and last disks width the same for all levels
 	const minSize = 40;
 	const step = 40 / (num - 1);
 	for (i = 0; i < num; i++) {
-		disks.push(
-			new Disk(startTower, i + 1, minSize + i * step + '%', DISKS_COLORS[i])
-		);
+		disks.push(new Disk(i + 1, minSize + i * step + '%', DISKS_COLORS[i]));
 	}
-	// console.log(disks);
 }
 
 // create and return disk html element.
@@ -137,16 +134,16 @@ function secondsToString(time) {
 function runTimer(run) {
 	// ** Timer start when the player move the first disk
 
-	// 'pause' is initialized to true and is
+	// 'run' is initialized to true and is
 	// controled by the drag start function and
 	// the pause button
 	if (run) {
-		// console.log('start interval');
+		// If true, start the timer
 		timerInterval = setInterval(() => {
 			timeEl.innerHTML = secondsToString(++timeCounter);
 		}, 1000);
 	} else {
-		// console.log('clear interval');
+		// Pause - clear the setInterval
 		clearInterval(timerInterval);
 		timerInterval = 0;
 	}
@@ -190,7 +187,7 @@ function init(currentLevel) {
 	timeCounter = 0;
 	timeEl.innerText = secondsToString(timeCounter);
 
-	// reset moves
+	// reset moves counter
 	movesCounter = 0;
 	moveEl.innerText = movesCounter;
 
@@ -218,22 +215,53 @@ function init(currentLevel) {
 	});
 }
 
-// Function create array of moves that solve the game for n disks
+// Recursive function creates array of moves that solve the game for n disks
 // Algorithm taken from www.tutorialspoint.com/data_structures_algorithms/tower_of_hanoi.htm
-
 function generateMoves(n, start = startTower, end = endTower, aux = auxTower) {
 	// if n=1, move disk from start to end
-	if (n === 1) movesArray.push(`${start} -> ${end}`);
+	// if (n === 1) movesArray.push({ disk: n, to: end });
+	if (n === 1) movesArray.push({ disk: 'disk-' + n, to: end });
 	else {
 		// move 'n-1' disk to aux
 		generateMoves(n - 1, start, aux, end);
 		// then move the last disk to end
-		movesArray.push(`${start} -> ${end}`);
+		movesArray.push({ disk: 'disk-' + n, to: end });
 		// then move 'n-1' disks to end
 		generateMoves(n - 1, aux, end, start);
 	}
 	return movesArray;
 }
+
+// ****** Start Work in Progress  (code not used in app) ****************
+// move the disks according to algorithm
+function moveDisks(currentLevel) {
+	// generate the array of moves (movesArray)
+	generateMoves(currentLevel);
+	// Iterate through moves and execute them with time delay
+	movesArray.forEach((move) => {
+		// for (i = 0; i < movesArray.length; i++) {
+		// console.log('moving', movesArray[i].disk, 'to', movesArray[i].to);
+		// console.log('moving', move.disk, 'to', move.to);
+		// Save the element that is moving
+		const el = document.getElementById(move.disk);
+		// remove the disk from its current location
+		document.getElementById(move.disk).remove();
+		// add the disk to destination tower
+		document.getElementById(move.to).prepend(el);
+
+		// console.log(i, movesArray[i]);
+		// disks[movesArray[i].disk - 1].moveTo(movesArray[i].to);
+		// disks[move.disk - 1].moveTo(move.to);
+		// wait some time before moving the next disk
+		// This technic was taken from Stack Overflow post
+		let start = new Date().getTime();
+		let end = start;
+		while (end < start + 3000) {
+			end = new Date().getTime();
+		}
+	});
+}
+// ****** End Work in Progress ****************
 
 // --- Fetch and add quote for end of game ---- //
 function fetchQuote(contentEl, authorEl) {
@@ -281,7 +309,7 @@ function onDragEnter(ev) {
 		) {
 			// console.log('Its a valid drop target');
 			ev.target.classList.add('drop-target');
-		} else {
+		} else if (fromTowerId !== ev.target.parentElement.id) {
 			ev.target.classList.add('drop-disable');
 		}
 	}
@@ -330,7 +358,7 @@ function onDrop(ev) {
 			}
 			// Make the top disk in 'from' tower draggable
 			if (towersState[fromTowerId].length > 0) {
-				console.log('Make', towersState[fromTowerId][0], 'draggable');
+				// console.log('Make', towersState[fromTowerId][0], 'draggable');
 				makeDraggable(document.getElementById(towersState[fromTowerId][0]));
 			}
 			// *** check for end of game (all the disks are in the last tower)
