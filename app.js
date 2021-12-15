@@ -63,14 +63,6 @@ const timeEl = document.querySelector('#time-counter');
 const moveEl = document.getElementById('move-counter');
 // Message
 const messageEl = document.getElementById('message');
-// --- Elements needed for event listeners
-// Game board
-// const mainEl = document.getElementById('game');
-// Each individual towers
-const leftTowerEl = document.getElementById('left-tower');
-const midTowerEl = document.getElementById('mid-tower');
-const rightTowerEl = document.getElementById('right-tower');
-const towers = [leftTowerEl, midTowerEl, rightTowerEl];
 
 // --- Helper functions (do little things) ---
 // show message on game board
@@ -170,14 +162,11 @@ function endGame() {
 // --- Main Functions ---
 // Setup board according to level + RESET
 function init(currentLevel) {
-	// remove current disks from towers
 	// console.log('Running init function');
-	towers.forEach((tower) => {
-		// clear current contents
-		Array.from(tower.getElementsByClassName('disk')).forEach((el) =>
-			el.remove()
-		);
-	});
+	// remove current disks from towers
+	Array.from(document.getElementsByClassName('disk')).forEach((el) =>
+		el.remove()
+	);
 	// adjust main board height
 	document.getElementById('towers').style.height =
 		currentLevel * DISK_HEIGHT + 3 * PADDING + 'px';
@@ -204,7 +193,7 @@ function init(currentLevel) {
 		// create new element
 		el = createDiskElement(disk);
 		// Add the disk to the left tower
-		leftTowerEl.appendChild(el);
+		document.getElementById(startTower).appendChild(el);
 	});
 	// reset and initialize towers data
 	TOWERS_NAMES.forEach((tower) => {
