@@ -200,7 +200,7 @@ function init(currentLevel) {
 		towersState[tower] = [];
 	});
 	disks.forEach((disk) => {
-		towersState[startTower].push('disk-' + disk.index);
+		towersState[startTower].push(disk.id);
 	});
 }
 
