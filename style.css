@@ -1,106 +1,44 @@
 /* variables */
 :root {
-	/* --rod-color: rgb(105, 78, 152);
-	--bg-color: rgb(247, 242, 255); */
 	--rod-color: rgb(28, 15, 6);
 	--bg-color: rgb(251, 248, 232);
+	--dark: rgb(33, 6, 67);
 }
 /* --- hide/show elements --- */
 
 body {
-	/* border: 3px solid black; */
-	background-color: var(--rod-color);
+	background-color: var(--dark);
 	margin: 0 auto;
-	max-width: 800px;
-	/* text-align: center; */
+	max-width: 700px;
 	font-family: 'Ubuntu', Helvetica, sans-serif;
 }
 header {
-	/* border: 2px solid green; */
-	/* display: flex; */
 	justify-content: center;
 	text-align: center;
 }
 
 #title {
-	/* border: 1px solid gray; */
 	display: inline-block;
-	color: rgb(152, 4, 4);
 	font-size: 2.5rem;
 }
 
 main {
 	background-color: var(--bg-color);
 	border-radius: 12px;
+	padding: 15px 20px;
 }
 
 button {
 	cursor: pointer;
-	background-color: var(--rod-color);
+	background-color: var(--dark);
 	color: var(--bg-color);
 	font-size: 16px;
-	padding: 12px;
+	padding: 8px 10px;
+	margin-right: 8px;
 	border: none;
 	border-radius: 6px;
 	box-shadow: 0 0 8px inset;
-	/* margin: 10px 20px; */
-}
-
-/* ---- Slider switch ---- */
-/* The switch - the box around the slider */
-.switch {
-	position: relative;
-	display: inline-block;
-	width: 60px;
-	height: 34px;
-}
-
-/* Hide default HTML checkbox */
-.switch input {
-	opacity: 0;
-	width: 0;
-	height: 0;
-}
-
-/* The slider */
-.slider {
-	position: absolute;
-	cursor: pointer;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: var(--rod-color);
-	-webkit-transition: 0.4s;
-	transition: 0.4s;
-	border-radius: 34px;
-}
-
-.slider:before {
-	position: absolute;
-	border-radius: 50%;
-	content: '';
-	height: 26px;
-	width: 26px;
-	left: 4px;
-	bottom: 4px;
-	background-color: var(--bg-color);
-	-webkit-transition: 0.4s;
-	transition: 0.4s;
-}
-
-input:checked + .slider {
-	background-color: var(--rod-color);
-}
-
-input:focus + .slider {
-	box-shadow: 0 0 1px var(--bg-color);
-}
-
-input:checked + .slider:before {
-	-webkit-transform: translateX(26px);
-	-ms-transform: translateX(26px);
-	transform: translateX(26px);
+	white-space: nowrap;
 }
 
 /* ----- Modals containers ---- */
@@ -125,7 +63,7 @@ input:checked + .slider:before {
 	padding: 20px;
 	text-align: center;
 	border-radius: 8px;
-	box-shadow: 0px 0px 5px var(--rod-color);
+	box-shadow: 0px 0px 5px var(--dark);
 	font-size: 1rem;
 	line-height: 1.3;
 	align-content: center;
@@ -134,11 +72,10 @@ input:checked + .slider:before {
 /* --- About modal ----------- */
 #about-box {
 	text-align: left;
-	color: var(--rod-color);
+	color: var(--dark);
 }
 
 #about-more {
-	/* border: 1px solid red; */
 	background-color: var(--bg-color);
 	border-radius: 12px;
 	padding: 20px;
@@ -148,7 +85,7 @@ input:checked + .slider:before {
 
 #sel-lvl-title {
 	display: inline-block;
-	color: var(--rod-color);
+	color: var(--dark);
 	font-size: 24px;
 }
 
@@ -159,26 +96,23 @@ input:checked + .slider:before {
 }
 
 /* Geme End modal */
-
 #game-end-title {
-	color: var(--rod-color);
+	color: var(--dark);
 	font-size: 24px;
 }
 
 #quote-wrapper {
 	margin-left: auto;
 	margin-right: auto;
-	/* max-width: 70%; */
-	/* display: block; */
 	padding: 10px 20px;
 	border-radius: 6px;
 	background-color: rgb(255, 255, 249);
-	box-shadow: 0px 0px 5px var(--rod-color);
+	box-shadow: 0px 0px 5px var(--dark);
 }
 #quote-content {
 	font-style: italic;
 	font-size: 20px;
-	color: rgb(75, 4, 111);
+	color: var(--dark);
 }
 
 #quote-author {
@@ -186,13 +120,10 @@ input:checked + .slider:before {
 	font-size: 14px;
 	text-align: right;
 	padding: 2px 20px 0 0;
-	/* margin-left: auto;
-    margin-right: 0 */
-	/* padding: 20px; */
 }
 
 #game-end-message {
-	color: var(--rod-color);
+	color: var(--dark);
 	font-size: 20px;
 }
 
@@ -200,8 +131,7 @@ input:checked + .slider:before {
 	padding: 10px 10px;
 	color: var(--bg-color);
 	margin: 12px;
-	min-width: 30px;
-	font-size: 30px;
+	font-size: 24px;
 	cursor: pointer;
 	border: none;
 	border-radius: 5px;
@@ -217,22 +147,14 @@ input:checked + .slider:before {
 }
 
 #title {
-	/* border: 1px solid gray; */
 	display: inline-block;
 	color: var(--bg-color);
 	font-size: 2.5rem;
 	margin: 20px 0 0 0;
 }
 
-.level-btn {
-	padding: 10px;
-	margin: 5px;
-	min-width: 30px;
-}
-
 h2 {
 	color: var(--bg-color);
-	/* margin: 0; */
 }
 
 #main-board {
@@ -240,19 +162,13 @@ h2 {
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
-	/* border: 2px solid red; */
 	margin: 0 auto;
-	width: 90%;
-
-	/* height: 400px; */
 }
 
 /* ----- Upper panel --- */
 #upper-panel {
-	/* border: 1px solid black; */
 	display: flex;
 	justify-content: space-between;
-	padding: 12px 40px;
 }
 #upper-panel > button {
 	margin-right: 10px;
@@ -260,92 +176,88 @@ h2 {
 
 /* Message window */
 #message {
-	width: 50%;
 	display: flex;
-	/* height: 20px; */
-	/* border: solid; */
-	background-color: var(--bg-color);
-	min-height: 40px;
+	color: var(--dark);
 	align-items: center;
-	font-size: 18px;
-	/* padding: 5px; */
+	flex-grow: 1;
+	font-size: 16px;
 }
+
 /* Lower Panel */
 #lower-panel {
-	/* border: 1px solid black; */
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 10px 40px;
-	margin: 0 auto;
-	position: relative;
+	padding: 10px 0 0 0;
 }
 /* --- Google Icons --- */
-.material-icons#pause-btn {
-	/* font-size: 8px; */
-}
-.material-icons {
-	/* font-size: 35px; */
-}
 
 .material-icons-outlined {
-	font-size: 35px;
-	color: var(--rod-color);
+	font-size: 24px;
+	color: var(--dark);
 }
 
 /* --- Timer ---- */
 /* Pause button */
 #pause-btn {
-	/* min-height: 5rem; */
-	/* background: none; */
 	border: none;
-	color: var(--bg-color);
 	margin: 0;
-	/* padding: 8px; */
+	font-size: 16px;
 }
 /* timer and moves wrappers */
 #lower-panel .wrapper {
 	display: flex;
 	align-items: center;
 	border: 1px solid var(--rod-color);
-	color: var(--rod-color);
-	padding: 8px;
+	color: var(--dark);
+	padding: 0 4px;
 	border-radius: 6px;
-	font-size: 28px;
+	font-size: 16px;
 	/* position: absolute; */
-	min-height: 50px;
+	min-height: 40px;
 }
 /* time counter */
 #time-counter {
-	margin: 10px;
+	margin-right: 5px;
 	min-width: 50px;
 	text-align: right;
 }
 /*--- moves counter ---*/
-#move-counter-wrapper {
-	display: flex;
-	align-items: center;
-	border: none;
-	border: 1px solid var(--rod-color);
-	padding: 4px;
-	border-radius: 6px;
-}
 #move-counter {
-	min-width: 50px;
+	min-width: 40px;
 	text-align: center;
+}
+
+#guided-mode-checkbox {
+	-webkit-appearance: none;
+	background-color: #fafafa;
+	border: 1px solid var(--dark);
+	padding: 8px;
+	border-radius: 3px;
+	display: inline-block;
+	position: relative;
+}
+
+#guided-mode-checkbox:checked {
+	border: 1px solid var(--dark);
+}
+
+#guided-mode-checkbox:checked:after {
+	content: '\2714';
+	font-size: 16px;
+	position: absolute;
+	top: 0px;
+	left: 1px;
+	color: var(--dark);
 }
 
 /*** Main game board style ***/
 #towers {
-	overflow: auto;
-	/* border: 3px solid yellow; */
 	display: flex;
-	/* height: 300px; */
 }
 
 .tower {
-	/* border: 2px solid green; */
-	width: 33%;
+	width: 33.3%;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
@@ -358,7 +270,7 @@ h2 {
 	background: var(--rod-color);
 	background-image: linear-gradient(
 		to right,
-		/* rgb(206, 149, 89), */ rgb(139, 100, 86),
+		rgb(139, 100, 86),
 		var(--rod-color) 60%
 	);
 	border-radius: 35px 35px 0 0;
@@ -366,7 +278,6 @@ h2 {
 	width: 25px;
 	/* height is updated by JS */
 	height: 100px;
-	margin: 20px 20px 0 20px;
 	position: absolute;
 	z-index: 0;
 }
@@ -384,8 +295,6 @@ h2 {
 }
 
 .disk {
-	/* border: 2px solid yellowgreen; */
-	/* box-shadow: 1px 1px 10px 1px rgb(223, 219, 25) inset; */
 	box-shadow: 0px 0px 10px 1px var(--bg-color) inset;
 	height: 30px;
 	color: var(--rod-color);
@@ -395,7 +304,7 @@ h2 {
 	text-align: center;
 	line-height: 2;
 	text-shadow: 0px 0px 2px var(--bg-color);
-}
+	  }
 
 .top-disk:hover {
 	border-width: 1px;
@@ -405,18 +314,18 @@ h2 {
 }
 
 #base {
-	/* background-color: var(--rod-color); */
-	background-image: linear-gradient(
-		/* rgb(206, 112, 10), */ rgb(139, 100, 86),
-		var(--rod-color) 60%
-	);
+	background-image: linear-gradient(rgb(139, 100, 86), var(--rod-color) 60%);
 	border-radius: 15px 15px 5px 5px;
 	min-height: 30px;
 	color: var(--bg-color);
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	padding: 0 8px 0 0;
+}
+
+#base span {
+	text-align: center;
+	min-width: 33.3%;
 }
 
 .hidden {

@@ -34,10 +34,11 @@
                     another stack or on an
                     empty rod.</li>
                 <li>
-                    No disk may be placed on top of a disk that is smaller than it.
+                    No disk may be placed on top of a smaller disk.
                 </li>
             </ol>
-            <p>To start the game, drag the top disk of the left stack into en empty rod.</p>
+            <p>To start the game, drag the top disk of the left stack into an empty rod.</p>
+            <p><span style='text-decoration: underline'>Guided Mode:</span> When checked, follow the instructions on how to move the disks to finish the game in the least amount of moves. </p>
 
             <p id='about-more' class='hidden'>The tower of Hanoi (also called the tower of Brahma or the Lucas tower)
                 was
@@ -79,16 +80,12 @@
         <div id='upper-panel'>
             <button id="about-btn">How to play</button>
             <button id='level-btn' title="Select Level">Select Level</button>
-            <span class='info' id='message' style="font-size: 20px;"></span>
-            <label id="theme-selector" class="switch">
-                <input id="toggle-switch" type="checkbox">
-                <span id="switch-btn" class="slider round"></span>
-            </label>
+            <span class='info' id='message'></span>
 
         </div>
         <div id='main-board'>
-            <div id='towers' ondrop="onDrop(event)" ondragover="return false"
-                    ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)">
+            <div id='towers' ondrop="onDrop(event)" ondragover="return false" ondragenter="onDragEnter(event)"
+                ondragleave="onDragLeave(event)">
                 <div id='left-tower' class='tower'>
                     <span id="left-tower-rod" class='rod'></span>
                 </div>
@@ -107,10 +104,14 @@
         </div>
         <div id='lower-panel'>
             <button id='reset-btn' title='Restart the game'>Restart</button>
+            <span id=guided-mode-wrapper class="wrapper">
+                <input id="guided-mode-checkbox" type="checkbox">
+                <label for="guided-mode">Guided Mode</label>
+
+            </span>
             <span id=move-counter-wrapper class=wrapper>
                 <span class="material-icons-outlined">directions_walk</span>
                 <span class='info' id='move-counter'></span>
-
             </span>
             <span id='timer' class=wrapper>
                 <span class="material-icons-outlined">&#xe425;</span>
