@@ -534,7 +534,6 @@ document.body.addEventListener('click', (event) => {
 			document.getElementById('switch-to-guidedmode').remove();
 			guidedMode = false;
 			document.getElementById('guided-mode-checkbox').checked = false;
-			console.log('turning off guided mode');
 			break;
 	}
 	if (event.target.parentElement.id === 'game-end-buttons') {
