@@ -20,9 +20,9 @@ The minimum number of steps to finish the game is 2^n - 1 (n is the number of di
 
 ## Implementation and How to play
 
-![Main View](./images/towerOfHanoi-main-view.png)
+![Main View](./images/main-view.png)
 
-- To start the game, simply drag the top disk of the left (A) stack and place it in either (B) or (C). Then continue moving the disk. Only the top disk in each stack is draggable and remember that disks can only be placed on top of a bigger disk (the app will enforce those rules).
+- To start the game, simply drag the top disk of the left (A) stack and place it in either (B) or (C). Then continue moving the disks. Only the top disk in each stack is draggable and remember that disks can only be placed on top of a bigger disk (the app will enforce those rules).
 - The defualt number of disks is three. To play with more disks, click on the 'Select Level' button and select the number of disks to play (click on the number).
 
 ![Select Level](images/select-level.png)
@@ -35,9 +35,18 @@ The minimum number of steps to finish the game is 2^n - 1 (n is the number of di
 
 - The steps counter show the number of disk moves you made.
 
-- When all the disks are at the right most rod (C), you'll see a popup window announcing your success with the option to restart the game or move to the next level (on not). A random inspirational quote will be displayed.
+- When all the disks are at the right most rod (C), you'll see a popup window announcing your success with the option to restart the game or move to the next level. A random inspirational quote will be displayed.
 
 ![End of Game popup](images/end-game.png)
+
+### Guided Mode: 
+![Guided Mode](images/guidedmode.png)
+
+When "Guided Mode" checkbox is checked, the app will guide the user on how to move the disks so the game will be done with the minimum number of moves.
+
+## Installation
+
+You are welcome to fork and clone this repository. The app consist of 3 files: index.html, app.js, and style.css. All files need to be at the root directory.
 
 ## Technologies Used
 
@@ -45,8 +54,5 @@ The minimum number of steps to finish the game is 2^n - 1 (n is the number of di
 - CSS
 - JavaScript
 
-## Farther development
 
-- 'Show-me' feature - The app will move the disks to the last rod with the minimal number of moves possible to show the player how to do it.
 
-- 'Guided Mode': When the player make a wrong move, the app will alert the player.

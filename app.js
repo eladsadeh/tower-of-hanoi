@@ -14,25 +14,30 @@ const DISKS_COLORS = [
 	'darkcyan',
 ];
 const DISK_HEIGHT = 30; // Disk height in px
-const PADDING = 50; // Padding for the rods height
-// towers ID
-const TOWERS_NAMES = ['left-tower', 'mid-tower', 'right-tower'];
+const PADDING = 40; // Padding for the rods height
+// towers ID and lables
+const TOWERS = [
+	{ id: 'left-tower', label: 'A' },
+	{ id: 'mid-tower', label: 'B' },
+	{ id: 'right-tower', label: 'C' },
+];
+// Start, End and Aux towers indexes
+const START = 0;
+const AUX = 1;
+const END = 2;
 
 // --- Global variables ---
-const startTower = TOWERS_NAMES[0];
-const auxTower = TOWERS_NAMES[1];
-const endTower = TOWERS_NAMES[2];
-
 const towersState = {}; // State of the towers
-const movesArray = []; // Hold minimum moves sequence
-const movesHistory = []; // Player moves history array
+let movesArray = []; // Hold minimum moves sequence
 
-let fromTowerId = ''; // FROM tower ID for disks move
+let fromId = ''; // FROM tower ID for disks move
 let disks = []; // Disks objects (class)
 let movesCounter = ''; // moves counter
 let timeCounter = ''; // timer
 let timerInterval = '';
 let currentLevel = DEFAULT_LEVEL; // Current dificulty level
+let guidedMode = false;
+let movesHistory = true;
 
 // --- CLASSes ---
 // Disk (location, color, size)
@@ -42,16 +47,6 @@ class Disk {
 		this.index = index;
 		this.size = size;
 		this.color = color;
-	}
-	// move this disk to destination 'to' (to is the ID of the destination)
-	moveTo(to) {
-		// console.log('moving', this.id, 'to', to);
-		// Save the element that is moving
-		const el = document.getElementById(this.id);
-		// remove the disk from its current location
-		document.getElementById(this.id).remove();
-		// add the disk to destination tower
-		document.getElementById(to).prepend(el);
 	}
 }
 
@@ -63,20 +58,14 @@ const timeEl = document.querySelector('#time-counter');
 const moveEl = document.getElementById('move-counter');
 // Message
 const messageEl = document.getElementById('message');
-// --- Elements needed for event listeners
-// Game board
-// const mainEl = document.getElementById('game');
-// Each individual towers
-const leftTowerEl = document.getElementById('left-tower');
-const midTowerEl = document.getElementById('mid-tower');
-const rightTowerEl = document.getElementById('right-tower');
-const towers = [leftTowerEl, midTowerEl, rightTowerEl];
 
 // --- Helper functions (do little things) ---
 // show message on game board
 function displayMessage(message, time = 4000) {
+	if (Number.isInteger(time)) {
+		setTimeout(() => (messageEl.innerText = ''), time);
+	}
 	messageEl.innerText = message;
-	setTimeout(() => (messageEl.innerText = ''), time);
 }
 
 // create array of disks using Disk class
@@ -91,7 +80,7 @@ function createDisks(num) {
 }
 
 // create and return disk html element.
-// Run during initialization and
+// Run during initialization and restart
 function createDiskElement(disk) {
 	let diskEl = document.createElement('span');
 	// style color, size
@@ -104,24 +93,19 @@ function createDiskElement(disk) {
 	diskEl.setAttribute('draggable', 'false');
 	diskEl.innerText = disk.index;
 	if (disk.index === 1) {
-		diskEl = makeDraggable(diskEl);
+		diskEl = makeDraggable(diskEl, true);
 	}
 	return diskEl;
 }
 
 // Add draggable attributes to element and return the element
-function makeDraggable(el) {
+function makeDraggable(el, bol) {
 	el.classList.add('top-disk');
-	el.setAttribute('draggable', 'true');
+	el.setAttribute('draggable', bol);
 	return el;
 }
 
-function makeUnDraggable(el) {
-	el.classList.remove('top-disk');
-	el.setAttribute('draggable', 'false');
-	return el;
-}
-
+// Convert the time counter to string in format 00:00
 function secondsToString(time) {
 	const minutes = Math.floor(time / 60);
 	const seconds = minutes ? time % 60 : time;
@@ -133,7 +117,6 @@ function secondsToString(time) {
 
 function runTimer(run) {
 	// ** Timer start when the player move the first disk
-
 	// 'run' is initialized to true and is
 	// controled by the drag start function and
 	// the pause button
@@ -152,12 +135,15 @@ function runTimer(run) {
 function endGame() {
 	// stop the timer
 	runTimer(false);
+	// Display message
 	let t = '';
 	let m = '';
 	if (movesCounter === 2 ** currentLevel - 1) {
+		// Game done in minimum number of steps
 		t = 'Perfect!';
 		m = `Game completed in ${movesCounter} moves. \n This is the minimum number of moves possible!\n Try the next level`;
 	} else {
+		// Can be done better ...
 		t = 'Well Done!';
 		m = `Game completed in ${movesCounter} moves.\n It is possible to do it in ${
 			2 ** currentLevel - 1
@@ -167,33 +153,59 @@ function endGame() {
 	displayGameEndModal(t, m);
 }
 
+function checkMoveValidity(from, to) {
+	// Green = its OK to drop
+	// Red = drop is not allowed
+	// Orange = in guided mode, its not the correct move (not allowed)
+	if (towersState[to].length && towersState[from][0] > towersState[to][0]) {
+		return 'red';
+	} else if (
+		// if its guided mode
+		// AND it's not the right disk OR not the right destination
+		guidedMode &&
+		(movesArray[movesCounter].disk !== towersState[from][0] ||
+			TOWERS[movesArray[movesCounter].to].id !== to)
+	)
+		return 'orange';
+	else return 'green';
+}
+
 // --- Main Functions ---
 // Setup board according to level + RESET
 function init(currentLevel) {
 	// remove current disks from towers
-	// console.log('Running init function');
-	towers.forEach((tower) => {
-		// clear current contents
-		Array.from(tower.getElementsByClassName('disk')).forEach((el) =>
-			el.remove()
-		);
-	});
+	Array.from(document.getElementsByClassName('disk')).forEach((el) =>
+		el.remove()
+	);
 	// adjust main board height
 	document.getElementById('towers').style.height =
-		currentLevel * DISK_HEIGHT + 3 * PADDING + 'px';
-	// display minimal number of moves
-	displayMessage(`Minimum steps: ${2 ** currentLevel - 1}`, 5000);
+		currentLevel * DISK_HEIGHT + 2 * PADDING + 'px';
+	// Prepare an array of moves
+	movesArray = [];
+	generateMoves(currentLevel);
+	movesHistory = true;
 	// reset time counter
+	runTimer(false);
 	timeCounter = 0;
 	timeEl.innerText = secondsToString(timeCounter);
 
 	// reset moves counter
 	movesCounter = 0;
 	moveEl.innerText = movesCounter;
+	// display minimal number of moves or first move
+
+	guidedMode
+		? displayMessage(
+				`Move ${movesArray[0].disk.replace('-', ' ')} to ${
+					TOWERS[movesArray[0].to].label
+				}`,
+				'keep'
+		  )
+		: displayMessage(`Minimum steps: ${2 ** currentLevel - 1}`, 'keep');
 
 	// adjust the rods height based on number of disks
 	Array.from(document.getElementsByClassName('rod')).forEach((rod, i) => {
-		rod.setAttribute('id', TOWERS_NAMES[i] + '-rod');
+		rod.setAttribute('id', TOWERS[i].id + '-rod');
 		rod.style.height = currentLevel * DISK_HEIGHT + PADDING + 'px';
 	});
 
@@ -204,64 +216,32 @@ function init(currentLevel) {
 		// create new element
 		el = createDiskElement(disk);
 		// Add the disk to the left tower
-		leftTowerEl.appendChild(el);
+		document.getElementById(TOWERS[START].id).appendChild(el);
 	});
 	// reset and initialize towers data
-	TOWERS_NAMES.forEach((tower) => {
-		towersState[tower] = [];
+	TOWERS.forEach((tower) => {
+		towersState[tower.id] = [];
 	});
 	disks.forEach((disk) => {
-		towersState[startTower].push('disk-' + disk.index);
+		towersState[TOWERS[START].id].push(disk.id);
 	});
 }
 
 // Recursive function creates array of moves that solve the game for n disks
 // Algorithm taken from www.tutorialspoint.com/data_structures_algorithms/tower_of_hanoi.htm
-function generateMoves(n, start = startTower, end = endTower, aux = auxTower) {
+function generateMoves(n, begin = START, finish = END, mid = AUX) {
 	// if n=1, move disk from start to end
-	// if (n === 1) movesArray.push({ disk: n, to: end });
-	if (n === 1) movesArray.push({ disk: 'disk-' + n, to: end });
+	if (n === 1) movesArray.push({ disk: 'disk-' + n, to: finish });
 	else {
 		// move 'n-1' disk to aux
-		generateMoves(n - 1, start, aux, end);
+		generateMoves(n - 1, begin, mid, finish);
 		// then move the last disk to end
-		movesArray.push({ disk: 'disk-' + n, to: end });
+		movesArray.push({ disk: 'disk-' + n, to: finish });
 		// then move 'n-1' disks to end
-		generateMoves(n - 1, aux, end, start);
+		generateMoves(n - 1, mid, finish, begin);
 	}
 	return movesArray;
 }
-
-// ****** Start Work in Progress  (code not used in app) ****************
-// move the disks according to algorithm
-function moveDisks(currentLevel) {
-	// generate the array of moves (movesArray)
-	generateMoves(currentLevel);
-	// Iterate through moves and execute them with time delay
-	movesArray.forEach((move) => {
-		// for (i = 0; i < movesArray.length; i++) {
-		// console.log('moving', movesArray[i].disk, 'to', movesArray[i].to);
-		// console.log('moving', move.disk, 'to', move.to);
-		// Save the element that is moving
-		const el = document.getElementById(move.disk);
-		// remove the disk from its current location
-		document.getElementById(move.disk).remove();
-		// add the disk to destination tower
-		document.getElementById(move.to).prepend(el);
-
-		// console.log(i, movesArray[i]);
-		// disks[movesArray[i].disk - 1].moveTo(movesArray[i].to);
-		// disks[move.disk - 1].moveTo(move.to);
-		// wait some time before moving the next disk
-		// This technic was taken from Stack Overflow post
-		let start = new Date().getTime();
-		let end = start;
-		while (end < start + 3000) {
-			end = new Date().getTime();
-		}
-	});
-}
-// ****** End Work in Progress ****************
 
 // --- Fetch and add quote for end of game ---- //
 function fetchQuote(contentEl, authorEl) {
@@ -272,8 +252,10 @@ function fetchQuote(contentEl, authorEl) {
 			authorEl.innerText = '~' + response.author;
 			contentEl.innerText = response.content;
 		})
-		.catch((response) => {
-			// console.log('cant get response');
+		.catch(() => {
+			authorEl.innerText = '~ Niels Bohr';
+			contentEl.innerText =
+				'Everything we call real is made of things that cannot be regarded as real.';
 		});
 }
 
@@ -288,8 +270,7 @@ function onDragStart(ev) {
 	// Start the timer if its not running
 	if (!Boolean(timerInterval)) runTimer(true);
 	// Log the origin tower
-	fromTowerId = ev.target.parentElement.id;
-	// console.log('drag start -', ev.target.id, 'from', fromTowerId);
+	fromId = ev.target.parentElement.id;
 	// get the disk data (html, id)
 	ev.dataTransfer.setData('text/html', ev.target.outerHTML);
 	ev.dataTransfer.setData('text', ev.target.id);
@@ -297,80 +278,113 @@ function onDragStart(ev) {
 }
 
 function onDragEnter(ev) {
-	// ev.preventDefault();
-	// console.log('Drag enter', ev.target.id);
 	const toId = ev.target.parentElement.id;
 	// IF entering a rod AND it's not the same rod
-	if (ev.target.id.includes('rod')) {
-		// AND IF its a valid drop target (empty or bigger disk)
-		if (
-			!towersState[toId].length ||
-			towersState[fromTowerId][0] < towersState[toId][0]
-		) {
-			// console.log('Its a valid drop target');
-			ev.target.classList.add('drop-target');
-		} else if (fromTowerId !== ev.target.parentElement.id) {
-			ev.target.classList.add('drop-disable');
-		}
+	if (ev.target.id.includes('rod') && toId !== fromId) {
+		// Check the validity of the target
+		const validity = checkMoveValidity(fromId, toId);
+		// Turn on highligt based on validity
+		ev.target.classList.add(`drop-highlight-${validity}`);
 	}
-	// add class to highlight the rod
 }
 function onDragLeave(ev) {
-	// ev.preventDefault();
-	// console.log('Drag leave', ev.target.id);
 	// IF leaving a rod
 	if (ev.target.id.includes('rod')) {
-		// remove class 'drop-target'
-		// console.log('removing drop-target class');
-		ev.target.classList.remove('drop-target');
-		ev.target.classList.remove('drop-disable');
+		const toId = ev.target.parentElement.id;
+		// Check the validity of the target
+		const validity = checkMoveValidity(fromId, toId);
+		// Turn off highlight
+		ev.target.classList.remove(`drop-highlight-${validity}`);
 	}
 }
 
 function onDrop(ev) {
-	// console.log('drop', ev.target.id, 'in: ', ev.target.parentElement.id);
 	// IF the target is a rod AND its not the same rod
-	if (
-		ev.target.id.includes('rod') &&
-		fromTowerId !== ev.target.parentElement.id
-	) {
+	if (ev.target.id.includes('rod') && fromId !== ev.target.parentElement.id) {
 		ev.preventDefault();
 		const toId = ev.target.parentElement.id;
+		// Check the validity of the target
+		const validity = checkMoveValidity(fromId, toId);
 		// Check if its OK to drop (either no disks or the top disk is bigger)
-		if (
-			!towersState[toId].length ||
-			towersState[fromTowerId][0] < towersState[toId][0]
-		) {
+		if (validity === 'green') {
 			// Its a valid drop !!
+			// Check if its a valid drop also in 'guided mode'
+			if (
+				!guidedMode &&
+				movesArray.length > movesCounter &&
+				(movesArray[movesCounter].disk !== towersState[fromId][0] ||
+					TOWERS[movesArray[movesCounter].to].id !== toId)
+			) {
+				movesHistory = false;
+			}
 			// update towers state array - move the disk from origin tower to destination tower
-			towersState[toId].unshift(towersState[fromTowerId].shift());
-			// Update moves counter
-			moveEl.innerText = ++movesCounter;
+			towersState[toId].unshift(towersState[fromId].shift());
 			// Remove the hightlight of the rod
-			ev.target.classList.remove('drop-target');
-			ev.target.classList.remove('drop-disable');
+			ev.target.classList.remove(`drop-highlight-${validity}`);
 			// move the html element
 			const data = ev.dataTransfer.getData('text');
 			ev.target.parentElement.prepend(document.getElementById(data));
 			// Make the bottom disk undraggable (if there is one)
 			if (towersState[toId].length > 1) {
-				makeUnDraggable(document.getElementById(towersState[toId][1]));
+				makeDraggable(document.getElementById(towersState[toId][1]), false);
 			}
 			// Make the top disk in 'from' tower draggable
-			if (towersState[fromTowerId].length > 0) {
-				// console.log('Make', towersState[fromTowerId][0], 'draggable');
-				makeDraggable(document.getElementById(towersState[fromTowerId][0]));
+			if (towersState[fromId].length > 0) {
+				makeDraggable(document.getElementById(towersState[fromId][0]), true);
 			}
+			// Update moves counter
+			moveEl.innerText = ++movesCounter;
 			// *** check for end of game (all the disks are in the last tower)
-			if (towersState[endTower].length === currentLevel) {
+			if (towersState[TOWERS[END].id].length === currentLevel) {
 				endGame();
+				return;
 			}
+			// display next move
+			guidedMode &&
+				displayMessage(
+					`Move ${movesArray[movesCounter].disk.replace('-', ' ')} to ${
+						TOWERS[movesArray[movesCounter].to].label
+					}`,
+					'keep'
+				);
 		} else {
 			// *** show message
-			displayMessage('Lower disk must be bigger');
-			ev.target.classList.remove('drop-disable');
+			!guidedMode && displayMessage('Lower disk must be bigger');
+			ev.target.classList.remove(`drop-highlight-${validity}`);
+
+			// ev.target.classList.remove('drop-highlight-red');
 		}
 	}
+}
+
+// Show level selection modal
+//create modal and insert it as first child of body
+function switchToGuidedMode() {
+	const modalWrapEl = document.createElement('div');
+	modalWrapEl.setAttribute('id', 'switch-to-guidedmode');
+	modalWrapEl.setAttribute('class', 'modal-container');
+	const modalEl = document.createElement('div');
+	modalEl.setAttribute('id', 'select-level-modal');
+	modalEl.setAttribute('class', 'modal');
+	const p = document.createElement('p');
+	p.setAttribute('id', 'switch-guidedmode');
+	p.innerText = "To turn-on guided mode, you'll need to start over";
+	modalEl.appendChild(p);
+	const btnContainer = document.createElement('div');
+	btnContainer.setAttribute('id', 'btn-container');
+	modalEl.appendChild(btnContainer);
+
+	let btn = document.createElement('button');
+	btn.setAttribute('id', 'switch-to-guidedmode-btn');
+	btn.innerText = 'Turn-on Guided Mode';
+	btnContainer.appendChild(btn);
+	btn = document.createElement('button');
+	btn.setAttribute('id', 'cancel-guidedmode-btn');
+	btn.innerText = 'Continue without Guided Mode';
+	btnContainer.appendChild(btn);
+
+	modalWrapEl.appendChild(modalEl);
+	document.body.prepend(modalWrapEl);
 }
 
 // Show level selection modal
@@ -389,18 +403,17 @@ function displayLevelSelect() {
 	const selBtnContainer = document.createElement('div');
 	selBtnContainer.setAttribute('id', 'sel-btn-container');
 	selBtnDiv.appendChild(selBtnContainer);
-	for (i = 2; i < DISKS_COLORS.length; i++) {
+	for (i = 3; i <= DISKS_COLORS.length; i++) {
 		const btn = document.createElement('button');
-		btn.setAttribute('id', 'lvl-btn-' + i + 1);
+		btn.setAttribute('id', 'lvl-btn-' + i);
 		btn.setAttribute('class', 'lvl-btn');
-		btn.setAttribute('data-level', i + 1);
+		btn.setAttribute('data-level', i);
 		btn.style.backgroundColor = DISKS_COLORS[i];
-		btn.innerText = i + 1;
+		btn.innerText = i;
 		selBtnContainer.appendChild(btn);
 	}
 	selectLevel.appendChild(selBtnDiv);
 	document.body.prepend(selectLevel);
-	// console.log(selectLevel);
 }
 
 // --- Game end modal ----
@@ -448,14 +461,6 @@ function displayGameEndModal(title, message) {
 	btn.setAttribute('title', 'Restart');
 	btn.innerText = 'reply';
 	gameEndBtnsEl.appendChild(btn);
-	// Cancel button
-	btn = document.createElement('button');
-	btn.setAttribute('id', 'game-end-cancel');
-	btn.setAttribute('class', 'game-end-btn');
-	btn.setAttribute('class', 'material-icons');
-	btn.setAttribute('title', 'Close window');
-	btn.innerText = 'close';
-	gameEndBtnsEl.appendChild(btn);
 	// next level button
 	btn = document.createElement('button');
 	btn.setAttribute('id', 'game-end-next');
@@ -470,13 +475,9 @@ function displayGameEndModal(title, message) {
 }
 
 // --- Event Listeners ---
-
 // Click on the window
 document.body.addEventListener('click', (event) => {
 	// event.preventDefault();
-	// console.log(event.target.id, 'was clicked');
-	// console.log(event.target.checked);
-	// console.log('The parent is:', event.target.parentElement.id);
 	switch (event.target.id) {
 		case 'reset-btn':
 			init(currentLevel);
@@ -488,9 +489,7 @@ document.body.addEventListener('click', (event) => {
 			document.getElementById('about-container').classList.remove('hidden');
 			break;
 		case 'close-about-btn':
-			console.log(document.getElementById('about-container').classList);
 			document.getElementById('about-container').classList.add('hidden');
-			console.log(document.getElementById('about-container').classList);
 			break;
 		case 'read-more-btn':
 			if (document.getElementById('about-more').classList.contains('hidden')) {
@@ -504,29 +503,38 @@ document.body.addEventListener('click', (event) => {
 		case 'level-btn':
 			displayLevelSelect();
 			break;
-		case 'toggle-switch':
-			// console.log(event.target.checked);
-			const bg = getComputedStyle(document.documentElement).getPropertyValue(
-				'--bg-color'
-			);
-			const fg = getComputedStyle(document.documentElement).getPropertyValue(
-				'--rod-color'
-			);
-			document.documentElement.style.setProperty('--bg-color', fg);
-			document.documentElement.style.setProperty('--rod-color', bg);
+		case 'guided-mode-checkbox':
+			guidedMode = event.target.checked;
+			guidedMode
+				? movesHistory && movesArray.length > movesCounter
+					? displayMessage(
+							`Move ${movesArray[movesCounter].disk.replace('-', ' ')} to ${
+								TOWERS[movesArray[movesCounter].to].label
+							}`,
+							'keep'
+					  )
+					: switchToGuidedMode()
+				: displayMessage(`Minimum steps: ${2 ** currentLevel - 1}`, 'keep');
+			break;
+		case 'switch-to-guidedmode-btn':
+			init(currentLevel);
+			document.getElementById('switch-to-guidedmode').remove();
+			break;
+		case 'cancel-guidedmode-btn':
+			document.getElementById('switch-to-guidedmode').remove();
+			guidedMode = false;
+			document.getElementById('guided-mode-checkbox').checked = false;
+			break;
 	}
 	if (event.target.parentElement.id === 'game-end-buttons') {
 		const id = event.target.id;
-		// console.log(document.getElementById('game-end-container'));
 		// remove the game end modal
 		document.getElementById('game-end-container').remove();
 		id.includes('next') && currentLevel++;
-		// console.log(currentLevel);
 		!id.includes('cancel') && init(currentLevel);
 	}
 	// If level selection button was clicked
 	if (event.target.parentElement.id === 'sel-btn-container') {
-		// console.log(event.target.dataset.level);
 		// update current level variable
 		currentLevel = parseInt(event.target.dataset.level);
 		document.getElementById('select-level-body').remove();
@@ -536,4 +544,5 @@ document.body.addEventListener('click', (event) => {
 
 // window.onload = function () {
 init(currentLevel);
+
 // };
