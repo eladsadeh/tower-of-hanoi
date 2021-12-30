@@ -461,16 +461,6 @@ function displayGameEndModal(title, message) {
 	btn.setAttribute('title', 'Restart');
 	btn.innerText = 'reply';
 	gameEndBtnsEl.appendChild(btn);
-	// Cancel button
-	if (!guidedMode) {
-		btn = document.createElement('button');
-		btn.setAttribute('id', 'game-end-cancel');
-		btn.setAttribute('class', 'game-end-btn');
-		btn.setAttribute('class', 'material-icons');
-		btn.setAttribute('title', 'Close window');
-		btn.innerText = 'close';
-		gameEndBtnsEl.appendChild(btn);
-	}
 	// next level button
 	btn = document.createElement('button');
 	btn.setAttribute('id', 'game-end-next');
@@ -516,7 +506,7 @@ document.body.addEventListener('click', (event) => {
 		case 'guided-mode-checkbox':
 			guidedMode = event.target.checked;
 			guidedMode
-				? movesHistory
+				? movesHistory && movesArray.length > movesCounter
 					? displayMessage(
 							`Move ${movesArray[movesCounter].disk.replace('-', ' ')} to ${
 								TOWERS[movesArray[movesCounter].to].label
