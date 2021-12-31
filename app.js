@@ -551,7 +551,4 @@ document.body.addEventListener('click', (event) => {
 	}
 });
 
-// window.onload = function () {
 init(currentLevel);
-
-// };
