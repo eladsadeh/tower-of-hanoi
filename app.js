@@ -475,6 +475,15 @@ function displayGameEndModal(title, message) {
 }
 
 // --- Event Listeners ---
+// Drag and drop event listeners
+document.getElementById('towers').addEventListener('drop', (ev) => onDrop(ev));
+document
+	.getElementById('towers')
+	.addEventListener('dragenter', (ev) => onDragEnter(ev));
+document
+	.getElementById('towers')
+	.addEventListener('dragleave', (ev) => onDragLeave(ev));
+
 // Click on the window
 document.body.addEventListener('click', (event) => {
 	// event.preventDefault();
