@@ -180,7 +180,7 @@ h2 {
 	color: var(--dark);
 	align-items: center;
 	flex-grow: 1;
-	font-size: 16px;
+	font-size: 18px;
 }
 
 /* Lower Panel */
@@ -212,8 +212,7 @@ h2 {
 	color: var(--dark);
 	padding: 0 4px;
 	border-radius: 6px;
-	font-size: 16px;
-	/* position: absolute; */
+	font-size: 18px;
 	min-height: 40px;
 }
 /* time counter */
@@ -230,24 +229,22 @@ h2 {
 
 #guided-mode-checkbox {
 	-webkit-appearance: none;
-	background-color: #fafafa;
-	border: 1px solid var(--dark);
-	padding: 8px;
+	appearance: none;
+	border: 2px solid var(--dark);
+	padding: 10px 10px;
 	border-radius: 3px;
 	display: inline-block;
 	position: relative;
 }
 
 #guided-mode-checkbox:checked {
-	border: 1px solid var(--dark);
+	border: 2px solid var(--dark);
+	padding: 1px 3px;
 }
 
 #guided-mode-checkbox:checked:after {
 	content: '\2714';
 	font-size: 16px;
-	position: absolute;
-	top: 0px;
-	left: 1px;
 	color: var(--dark);
 }
 
@@ -304,7 +301,7 @@ h2 {
 	text-align: center;
 	line-height: 2;
 	text-shadow: 0px 0px 2px var(--bg-color);
-	  }
+}
 
 .top-disk:hover {
 	border-width: 1px;
