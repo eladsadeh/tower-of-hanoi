@@ -100,7 +100,7 @@ function createDiskElement(disk) {
 
 // Add draggable attributes to element and return the element
 function makeDraggable(el, bol) {
-	el.classList.add('top-disk');
+	bol ? el.classList.add('top-disk') : el.classList.remove('top-disk');
 	el.setAttribute('draggable', bol);
 	return el;
 }
